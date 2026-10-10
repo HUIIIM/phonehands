@@ -1,0 +1,12 @@
+{
+  "name": "@phonehands/integration-smoke",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Cross-package integration smoke: real core Router + real hinge API adapter + real WDA device backend against mock servers.",
+  "scripts": {
+    "test": "node --test integration.test.ts",
+    "typecheck": "tsc --noEmit --allowImportingTsExtensions --erasableSyntaxOnly --module nodenext --moduleResolution nodenext --target es2022 --strict --skipLibCheck integration.test.ts"
+  },
+  "license": "SEE LICENSE IN LICENSE file"
+}

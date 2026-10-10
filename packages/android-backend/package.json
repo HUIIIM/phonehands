@@ -1,0 +1,25 @@
+{
+  "dependencies": {
+    "ws": "8.22.0"
+  },
+  "description": "Wireless-first Android device engine: phone dials out over WebSocket, agent serves actions (tap/swipe/screenshot/launch/observe)",
+  "devDependencies": {
+    "@types/ws": "8.18.1",
+    "c8": "12.0.0",
+    "typescript": "^5.9.0"
+  },
+  "files": [
+    "dist"
+  ],
+  "license": "SEE LICENSE IN LICENSE file",
+  "main": "./src/index.ts",
+  "name": "@phonehands/android-backend",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "prepublishOnly": "echo 'DO NOT PUBLISH: GC + CEO sign-off required before any public release' && exit 1",
+    "test": "c8 --check-coverage --lines 80 --reporter=text node --test tests/*.test.ts"
+  },
+  "type": "module",
+  "types": "./dist/index.js",
+  "version": "0.1.0"
+}

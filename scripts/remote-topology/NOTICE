@@ -1,0 +1,34 @@
+# SPDX-License-Identifier: BUSL-1.1 (pending GC final review)
+
+# NOTICE — third-party components referenced by PhoneHands remote-topology
+
+## headscale (juanfont/headscale)
+
+- What: open-source, self-hosted implementation of the Tailscale control
+  server (coordination server for a WireGuard mesh network).
+- License: BSD-3-Clause.
+- Copyright: (c) 2021-2026 Juan Font and the headscale contributors.
+  Full license text: https://github.com/juanfont/headscale/blob/main/LICENSE
+- How we use it: `scripts/remote-topology/setup.sh` can install headscale
+  on the USER'S OWN server and join the Mac + operator nodes to it, so the
+  remote-topology coordination plane is self-hosted. We do not vendor or
+  modify headscale code; the script downloads the official release binary
+  at deploy time.
+- Status: integration direction approved for Phase 1; **pending GC final
+  ruling** before any public release.
+
+## WebDriverAgent (appium/WebDriverAgent)
+
+- What: Apple's XCTest-based UI automation service running on the iPhone.
+- License: BSD-3-Clause (Appium).
+- How we use it: `setup.sh` clones the upstream repo and builds it with the
+  user's own Apple ID in Xcode. No vendored code.
+
+## WDA signing flow — ideas learned (clean-room)
+
+- The 48h-expiry warning, "re-sign is fully local / never scripts Apple
+  credentials", "phone must be unlocked by hand", and "re-signing mid-week
+  does not move Apple's 7-day clock" are operational ideas learned from
+  ucsandman/SideTap's public docs (signing.py / setup-windows.md).
+  No code was copied; `resign.sh` is an independent macOS/Xcode
+  implementation of the same operational truths.

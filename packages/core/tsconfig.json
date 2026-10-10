@@ -1,0 +1,1 @@
+{"compilerOptions": {"allowImportingTsExtensions": true, "erasableSyntaxOnly": true, "forceConsistentCasingInFileNames": true, "module": "NodeNext", "moduleResolution": "NodeNext", "noEmit": true, "rootDir": ".", "skipLibCheck": true, "strict": true, "target": "ES2022", "types": ["node"]}, "include": ["src/**/*", "test/**/*"]}

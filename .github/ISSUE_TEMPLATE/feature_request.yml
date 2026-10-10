@@ -1,0 +1,13 @@
+name: 功能建议
+description: 想要一个新能力
+body:
+  - type: textarea
+    id: problem
+    attributes: {label: "你要解决什么问题", description: "先讲问题，再讲方案"}
+    validations: {required: true}
+  - type: textarea
+    id: proposal
+    attributes: {label: "你的方案"}
+  - type: dropdown
+    id: backend
+    attributes: {label: "涉及哪只手", options: ["API 引擎", "设备引擎", "两只手", "不确定"]}

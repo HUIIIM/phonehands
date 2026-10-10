@@ -1,0 +1,22 @@
+{
+  "dependencies": {
+    "@phonehands/api-backend": "*"
+  },
+  "description": "Hinge app adapter (MVP: read-only) for the phonehands API engine. Tests run against the bundled mock server only.",
+  "devDependencies": {
+    "typescript": "^5.9.0"
+  },
+  "files": [
+    "src"
+  ],
+  "main": "./src/index.ts",
+  "name": "@phonehands/hinge-adapter",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "prepublishOnly": "echo 'DO NOT PUBLISH: GC + CEO sign-off required before any public release' && exit 1",
+    "test": "node --test tests/*.test.ts"
+  },
+  "type": "module",
+  "types": "./src/index.ts",
+  "version": "0.1.0"
+}

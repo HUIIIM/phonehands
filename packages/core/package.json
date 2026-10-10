@@ -1,0 +1,19 @@
+{
+  "description": "phonehands core: unified Action interface, Router, result envelope, serial op queue, auth handoff",
+  "files": [
+    "dist"
+  ],
+  "license": "SEE LICENSE IN LICENSE.md",
+  "main": "./src/index.ts",
+  "name": "@phonehands/core",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "prebuild": "node scripts/gen-build-flags.cjs",
+    "test": "node --test test/actions.test.ts test/envelope.test.ts test/router.test.ts test/queue.test.ts test/auth-handoff.test.ts test/security.test.ts",
+    "test:coverage": "npm run build && c8 --check-coverage --lines 80 --reporter=text node --test test/actions.test.ts test/envelope.test.ts test/router.test.ts test/queue.test.ts test/auth-handoff.test.ts test/security.test.ts",
+    "test:readonly": "PHONEHANDS_READ_ONLY=1 npm run build && node --test test/readonly.test.ts"
+  },
+  "types": "dist/src/index.d.ts",
+  "version": "0.1.0",
+  "type": "module"
+}

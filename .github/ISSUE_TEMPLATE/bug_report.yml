@@ -1,0 +1,20 @@
+name: Bug 反馈
+description: 报一个复现得了的问题
+body:
+  - type: input
+    id: version
+    attributes: {label: "版本", description: "phonehands --version 的输出"}
+    validations: {required: true}
+  - type: dropdown
+    id: backend
+    attributes: {label: "后端", options: ["API 引擎", "iOS 设备", "安卓设备", "不清楚"]}
+  - type: textarea
+    id: repro
+    attributes: {label: "复现步骤", description: "1. 2. 3. 写清楚"}
+    validations: {required: true}
+  - type: textarea
+    id: expected
+    attributes: {label: "期望 vs 实际"}
+  - type: textarea
+    id: logs
+    attributes: {label: "日志", description: "贴 doctor 输出或报错（先脱敏：删掉 token/手机号）"}

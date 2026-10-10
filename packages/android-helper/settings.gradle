@@ -1,0 +1,17 @@
+// SPDX-License-Identifier: BUSL-1.1 (pending GC final review)
+pluginManagement {
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+rootProject.name = "phonehands-android-helper"
+include(":app")

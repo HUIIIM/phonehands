@@ -1,0 +1,1 @@
+{"description":"phonehands demo A (mock): \"API died, the task didn't\" — one script, both engines, auto-degrade.","devDependencies":{"@types/node":"^24.0.0"},"name":"@phonehands/dual-demo","private":true,"scripts":{"demo":"node dual-demo.ts","test":"node --test dual-demo.test.ts","typecheck":"tsc --noEmit -p tsconfig.json"},"type":"module","version":"0.1.0"}

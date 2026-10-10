@@ -1,0 +1,8 @@
+<!-- SPDX-License-Identifier: BUSL-1.1 (pending GC final review) -->
+<accessibility-service xmlns:android="http://schemas.android.com/apk/res/android"
+    android:description="@string/a11y_description"
+    android:accessibilityEventTypes="typeAllMask"
+    android:accessibilityFeedbackType="feedbackGeneric"
+    android:notificationTimeout="50"
+    android:canPerformGestures="true"
+    android:canRetrieveWindowContent="true" />

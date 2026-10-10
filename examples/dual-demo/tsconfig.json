@@ -1,0 +1,1 @@
+{"compilerOptions":{"allowImportingTsExtensions":true,"module":"nodenext","moduleResolution":"nodenext","noEmit":true,"skipLibCheck":true,"strict":true,"target":"es2022"},"include":["dual-demo.ts","dual-demo.test.ts"]}

@@ -1,0 +1,70 @@
+# SPDX-License-Identifier: BUSL-1.1 (pending GC final review)
+#
+# Gate 4a (Android): protocol chain + real-device smoke on an Android Emulator.
+#
+# What this proves ($0, no hardware):
+#   1. @phonehands/android-backend full unit+e2e suite on a real Android-x86
+#      kernel (the tests use MockAndroidDevice, but over REAL TCP/WebSocket
+#      sockets — no in-process fakes).
+#   2. android-wireless-demo assertions (relay connect -> frame -> tap ->
+#      screenshot -> observe -> launch) on the runner.
+#   3. emulator-smoke.ts: a REAL Android OS driven through the EXACT adb
+#      command shapes our wireless-adb fallback documents (tapCommand /
+#      screenshotCommand builders) — real tap executed, real PNG screencap
+#      magic verified. This is the closest CI gets to a device without one.
+#
+# Trigger policy: manual + weekly only (same cost discipline as the iOS
+# workflow; the emulator boot is the expensive part, ~3-5 min).
+#
+# Honest scope: proves adb reachability + command shapes on a real Android
+# OS. The helper APK path (AccessibilityService/MediaProjection, the
+# wireless-first design) still needs gate 4b physical devices. Never cite
+# this workflow as "real-device testing passed".
+#
+# Secrets: none required.
+
+name: "gate-4a · Android Emulator — protocol chain + adb smoke"
+
+on:
+  workflow_dispatch: {}
+  schedule:
+    # Weekly, Monday 09:00 UTC (05:00 ET) — cheap, off-peak.
+    - cron: "0 9 * * 1"
+
+jobs:
+  android-emulator:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install JS dependencies
+        run: npm ci --workspaces --include-workspace-root
+
+      - name: Boot emulator + run protocol chain + real adb smoke
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 34
+          target: google_apis
+          arch: x86_64
+          profile: pixel_7
+          script: |
+            set -euo pipefail
+            adb wait-for-device
+            SERIAL="$(adb get-serialno)"
+            echo "Emulator serial: ${SERIAL}"
+            echo "--- 1/3 android-backend suite (real TCP/WS, mock phone) ---"
+            npm test --workspace=@phonehands/android-backend
+            echo "--- 2/3 wireless-demo assertions ---"
+            PHONEHANDS_RELAY_URL="ws://127.0.0.1:8099/phonehands-android" \
+              node examples/android-wireless-demo/demo.ts
+            echo "--- 3/3 real adb smoke (real Android OS, our cmd builders) ---"
+            ANDROID_SERIAL="${SERIAL}" node examples/android-wireless-demo/emulator-smoke.ts

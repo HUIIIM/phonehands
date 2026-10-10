@@ -1,0 +1,151 @@
+# SPDX-License-Identifier: BUSL-1.1 (pending GC final review)
+#
+# Gate 4a (iOS): REAL WebDriverAgent protocol chain on an iOS Simulator.
+#
+# What this proves ($0, no hardware, no signing team):
+#   - A real WebDriverAgent (appium/WebDriverAgent, master) built and launched
+#     on a real iOS Simulator OS — no signing team needed because simulator
+#     builds do not require device provisioning.
+#   - packages/device-backend/test/simulator-live.test.ts runs the FULL
+#     protocol chain against that real WDA: session bootstrap + snapshot
+#     tuning, REAL auto-heal (session killed out-of-band -> recovered=true),
+#     observe (real control-tree parse), screenshot (real PNG magic),
+#     tap + swipe, disconnect. Zero mocks in that file.
+#
+# COST NOTE (read before "improving" the triggers): GitHub-hosted macOS
+# runners bill at 10x the Linux rate against the 2000 free min/month quota.
+# This workflow deliberately runs ONLY on manual dispatch + weekly schedule —
+# NOT on push/PR. Per-PR signal comes from `npm test` (mock suite), which
+# covers the same client logic deterministically in seconds.
+#
+# Honest scope: validates the entire WDA protocol chain our client speaks.
+# Physical-device quirks (touch sampling, system dialogs, network handoffs,
+# 7-day free-signing expiry) are gate 4b. Never cite this workflow as
+# "real-device testing passed".
+#
+# Secrets: none required. Simulator builds need no Apple ID, no signing
+# identity, no provisioning profile. If a future step needs device-farm
+# credentials, they go in GitHub Secrets — never hardcoded here.
+
+name: "gate-4a · iOS Simulator — real WDA protocol chain"
+
+on:
+  workflow_dispatch: {}
+  schedule:
+    # Weekly, Monday 09:00 UTC (05:00 ET) — cheap, off-peak.
+    - cron: "0 9 * * 1"
+
+jobs:
+  wda-simulator:
+    runs-on: macos-14
+    timeout-minutes: 45
+    env:
+      PHONEHANDS_WDA_URL: http://127.0.0.1:8100
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Select Xcode (newest 16.x on the image)
+        run: |
+          set -euo pipefail
+          echo "Available Xcode apps:"
+          ls -d /Applications/Xcode*.app || true
+          XCODE="$(ls -d /Applications/Xcode_16*.app 2>/dev/null | sort -V | tail -1 || true)"
+          if [ -z "${XCODE}" ]; then
+            echo "::warning::No Xcode 16.x found; using the image default."
+          else
+            echo "Selecting ${XCODE}"
+            sudo xcode-select -s "${XCODE}/Contents/Developer"
+          fi
+          xcodebuild -version
+
+      - name: Set up Node.js 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install JS dependencies
+        run: npm ci --workspaces --include-workspace-root
+
+      - name: Clone WebDriverAgent (appium fork, master, shallow)
+        run: |
+          git clone --depth 1 https://github.com/appium/WebDriverAgent.git "${RUNNER_TEMP}/WDA"
+          cd "${RUNNER_TEMP}/WDA" && git rev-parse --short HEAD
+
+      - name: Pick an available iPhone simulator
+        id: sim
+        run: |
+          set -euo pipefail
+          UDID="$(xcrun simctl list devices available --json | python3 -c '
+          import json, subprocess, sys
+          raw = subprocess.run(["xcrun", "simctl", "list", "devices", "available", "--json"],
+                               capture_output=True, text=True).stdout
+          data = json.loads(raw)
+          fallback = None
+          for runtime, devs in data.get("devices", {}).items():
+              for d in devs:
+                  avail = d.get("isAvailable", False) or "(available)" in str(d.get("availability", ""))
+                  if not avail or "iPhone" not in d.get("name", ""):
+                      continue
+                  if fallback is None:
+                      fallback = d["udid"]
+                  if "iPhone 16" in d["name"]:
+                      print(d["udid"]); sys.exit(0)
+          if fallback:
+              print(fallback)
+          else:
+              sys.exit(1)
+          ')"
+          echo "udid=${UDID}" >> "${GITHUB_OUTPUT}"
+          echo "Using simulator ${UDID}"
+
+      - name: Build WDA for the simulator (no signing team needed)
+        run: |
+          set -euo pipefail
+          cd "${RUNNER_TEMP}/WDA"
+          xcodebuild \
+            -project WebDriverAgent.xcodeproj \
+            -scheme WebDriverAgentRunner \
+            -destination "id=${{ steps.sim.outputs.udid }}" \
+            build-for-testing > "${RUNNER_TEMP}/wda-build.log" 2>&1
+          echo "WDA built OK"
+
+      - name: Install + launch WDA runner on the simulator
+        run: |
+          set -euo pipefail
+          APP="$(find "${RUNNER_TEMP}/WDA" -path '*Debug-iphonesimulator/WebDriverAgentRunner-Runner.app' | head -1)"
+          echo "Runner app: ${APP}"
+          xcrun simctl boot "${{ steps.sim.outputs.udid }}" 2>/dev/null || true
+          xcrun simctl install booted "${APP}"
+          # Bundle id of the WDA runner target (stable across appium releases).
+          xcrun simctl launch booted com.apple.test.WebDriverAgentRunner-Runner
+          echo "WDA runner launched"
+
+      - name: Wait for WDA on http://127.0.0.1:8100
+        run: |
+          set -euo pipefail
+          for i in $(seq 1 60); do
+            if curl -sf http://127.0.0.1:8100/status >/dev/null 2>&1; then
+              echo "WDA is up after ~$((i * 10))s"
+              curl -s http://127.0.0.1:8100/status
+              echo
+              exit 0
+            fi
+            sleep 10
+          done
+          echo "::error::WDA never came up on :8100"
+          tail -50 "${RUNNER_TEMP}/wda-build.log" || true
+          exit 1
+
+      - name: Live protocol tests vs real WDA (no mocks)
+        run: node --test packages/device-backend/test/simulator-live.test.ts
+
+      - name: Upload WDA build log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: wda-simulator-log
+          path: ${{ runner.temp }}/wda-build.log
+          if-no-files-found: warn

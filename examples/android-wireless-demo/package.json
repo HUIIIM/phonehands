@@ -1,0 +1,1 @@
+{"description":"PhoneHands Android wireless demo (mock phone): connect -> frame -> tap -> screenshot -> observe -> launch, with unified healthcheck output.","name":"@phonehands/android-wireless-demo","private":true,"scripts":{"demo":"node demo.ts","typecheck":"tsc --noEmit -p tsconfig.json"},"type":"module","version":"0.1.0"}
