@@ -55,6 +55,16 @@ jobs:
         # shared libraries: libpulse.so.0" before the emulator even starts.
         run: sudo apt-get update -y -qq && sudo apt-get install -y -qq libpulse0
 
+      - name: Enable KVM for the emulator
+        # Without KVM the x86_64 emulator falls back to full software
+        # emulation and never finishes booting inside the timeout
+        # ("ProbeKVM: This user doesn't have permissions to use KVM").
+        # Standard workaround from reactivecircus/android-emulator-runner README.
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
       - name: Boot emulator + run protocol chain + real adb smoke
         uses: reactivecircus/android-emulator-runner@v2
         with:
