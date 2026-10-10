@@ -124,6 +124,10 @@ jobs:
           fi
           echo "Runner app: ${APP}"
           xcrun simctl boot "${{ steps.sim.outputs.udid }}" 2>/dev/null || true
+          # boot returns as soon as boot STARTS; launching before SpringBoard
+          # is ready fails with FBSOpenApplicationServiceErrorDomain code 4.
+          # bootstatus -b blocks until the device is fully booted.
+          xcrun simctl bootstatus "${{ steps.sim.outputs.udid }}" -b
           xcrun simctl install booted "${APP}"
           # Bundle id of the WDA runner target (stable across appium releases).
           xcrun simctl launch booted com.apple.test.WebDriverAgentRunner-Runner
