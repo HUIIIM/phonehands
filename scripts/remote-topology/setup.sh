@@ -452,8 +452,10 @@ case "$TUNNEL_MODE" in
     SSH_PORT="${PHONEHANDS_SSH_TUNNEL_PORT:-18100}"
     log_info "self-hosted relay leg 2: SSH reverse tunnel"
     log_info "  $(redact "$SSH_HOST"):$SSH_PORT -> 127.0.0.1:$WDA_PORT (key-based auth only)"
-    start_bg "ssh-tunnel" ssh -fN -o ExitOnForwardFailure=yes -o ServerAliveInterval=30 \
-      -o ServerAliveCountMax=3 -R "0.0.0.0:$SSH_PORT:127.0.0.1:$WDA_PORT" "$SSH_HOST"
+    # supervised tunnel: auto-reconnect ~5s after drop (loot 2026-10-10: 404jsh pattern —
+    # one-shot `ssh -fN` never comes back on its own; dead peer detected via ServerAlive)
+    start_bg "ssh-tunnel" env SSH_PORT="$SSH_PORT" WDA_PORT="$WDA_PORT" SSH_HOST="$SSH_HOST" \
+      bash -c 'while true; do ssh -N -o ExitOnForwardFailure=yes -o ServerAliveInterval=15 -o ServerAliveCountMax=2 -o ConnectTimeout=10 -R "0.0.0.0:$SSH_PORT:127.0.0.1:$WDA_PORT" "$SSH_HOST"; sleep 5; done'
     SSH_HOST_USED="$SSH_HOST"
     TUNNEL_ENDPOINT="${SSH_HOST##*@}:$SSH_PORT"
     TUNNEL_REACHABLE_LOCAL=0
