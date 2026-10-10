@@ -68,3 +68,4 @@ jobs:
               node examples/android-wireless-demo/demo.ts
             echo "--- 3/3 real adb smoke (real Android OS, our cmd builders) ---"
             ANDROID_SERIAL="${SERIAL}" node examples/android-wireless-demo/emulator-smoke.ts
+# retrigger 2026-10-10T02:59:58Z
