@@ -109,13 +109,19 @@ jobs:
             -project WebDriverAgent.xcodeproj \
             -scheme WebDriverAgentRunner \
             -destination "id=${{ steps.sim.outputs.udid }}" \
+            -derivedDataPath "${RUNNER_TEMP}/WDA-dd" \
             build-for-testing > "${RUNNER_TEMP}/wda-build.log" 2>&1
           echo "WDA built OK"
 
       - name: Install + launch WDA runner on the simulator
         run: |
           set -euo pipefail
-          APP="$(find "${RUNNER_TEMP}/WDA" -path '*Debug-iphonesimulator/WebDriverAgentRunner-Runner.app' | head -1)"
+          APP="$(find "${RUNNER_TEMP}/WDA-dd" -path '*Debug-iphonesimulator/WebDriverAgentRunner-Runner.app' | head -1)"
+          if [ -z "${APP}" ]; then
+            echo "::error::WDA runner .app not found under ${RUNNER_TEMP}/WDA-dd"
+            find "${RUNNER_TEMP}/WDA-dd" -maxdepth 4 -name '*.app' | head -20 || true
+            exit 1
+          fi
           echo "Runner app: ${APP}"
           xcrun simctl boot "${{ steps.sim.outputs.udid }}" 2>/dev/null || true
           xcrun simctl install booted "${APP}"

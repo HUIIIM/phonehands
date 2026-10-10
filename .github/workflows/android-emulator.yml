@@ -52,10 +52,17 @@ jobs:
       - name: Boot emulator + run protocol chain + real adb smoke
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 34
-          target: google_apis
+          # API 30 + default target: boots in ~1-2 min on hosted runners.
+          # (API 34 google_apis never finished booting within the action's
+          # internal timeout — "Timeout waiting for emulator to boot".)
+          # Nothing in the test chain needs a newer API: the backend suite
+          # uses MockAndroidDevice over real TCP/WS, and emulator-smoke.ts
+          # only needs `input tap` + `screencap -p`.
+          api-level: 30
+          target: default
           arch: x86_64
           profile: pixel_7
+          emulator-options: -no-snapshot -no-audio -no-boot-anim -camera-back none
           script: |
             set -euo pipefail
             adb wait-for-device
