@@ -9,10 +9,14 @@
 ![CI: planned](https://img.shields.io/badge/CI-planned-lightgrey)
 ![Docs: first batch](https://img.shields.io/badge/docs-first%20batch-green)
 
-> **hero 图占位（1200px+，真机被 AI 操作的一帧）——待内容管线实拍。**
-> 本仓库当前没有实拍图，**绝不**用 AI 生成的假图冒充真实操作截图。
+**API 死了，任务照样跑完。** 另一只手接上，只用了 4 毫秒——20 条 matches，一条不少。
 
-**一句话：给 AI 的两只手——一只讲 API（快），一只点屏幕（真）。API 死了，任务没死。**
+> Hinge 更新了 App，接口 403 了——20 条 matches 照样读出来了。
+> 同一个脚本，Router 自动从 API 引擎切到设备引擎（真机点屏）。
+
+![PhoneHands demo v2：API 死了，任务照样跑完](docs/assets/phonehands-demo-v2.gif)
+
+*给 AI 的两只手——一只讲 API（快），一只点屏幕（真）。上图为 8 秒剪辑版 GIF；32 秒完整版视频随发布包提供。画面为真实代码链路实录（本地服务），日志行逐字取自真实运行输出。*
 
 ## 诚实声明（先读这 4 条，再决定要不要用）
 
@@ -55,6 +59,8 @@ cd examples/dual-demo && npm test       # mock 演示"API 死了，任务没死"
 
 ## 它能做什么
 
+别管架构——你只关心三件事：**接口挂了你的任务照跑**（真实演示：403 之后设备端 4 毫秒接上，20 条 matches 一条不少）；**读数毫秒级**（演示里 406 / 273 / 333 ms）；**写操作默认不存在**（编译期开关，默认构建里根本没有，想误操作都没门）。
+
 | 动作 | 示例 | 哪只手 | 证据 |
 |------|------|--------|------|
 | `read` / `likes_received` / `matches` / `chat_messages` | 毫秒级拉取 Hinge 点赞/匹配/聊天（结构化 JSON） | API 引擎（只读，编译期锁定） | `adapters/hinge` mock 测试全绿 |
@@ -79,7 +85,7 @@ graph LR
     Router -.->|API 403/429/超时| DEVE
 ```
 
-**一句话讲自动降级**：API 403 → 设备层自动接管；每一次结果都带 `degraded` 标记，不确定绝不重放（MV427）。
+**一句话讲自动降级**：接口挂了，你的任务照跑——Router 自己切到"真机点屏"那只手，全程你无感；每一次结果都带 `degraded` 标记，降级了你一定看得见，不确定绝不重放（MV427）。
 
 ## 安装
 
@@ -166,6 +172,35 @@ cd examples/dual-demo && npm test
 
 更多见 [docs/troubleshooting.md](./docs/troubleshooting.md)（Top 30）。
 
+## FAQ（先看这里，再去提 issue）
+
+**1. 这跟 iPhone Use 有什么区别？**
+iPhone Use 是纯设备层（USB 直连 WDA）。PhoneHands 是双引擎：API 引擎（快）＋设备引擎（真），Router 自动降级；外加第三条腿——一键远程拓扑（Mac 一条命令变成远程可操作端点，自托管）。我们洁净室学习过 iPhone Use，致谢见文末。
+
+**2. API 引擎挂了，我的任务会停吗？**
+不会。演示里 1 次 4xx 就切（`degradeAfterFaults` 可配，生产建议 3 次防抖动），真实日志里设备端 read 只用了 4 毫秒——你无感，任务照跑。每一次结果都带 `degraded` 标记，降级了你一定看得见，不会悄悄发生。
+
+**3. 微信/小红书这种自绘 UI 能点准吗？**
+这是已知局限，不画饼：accessibility 树不可用时走截图回退链（`observe` 自动降级），但自绘 UI 的精准定位仍在 Phase 2 攻坚。诚实声明第 4 条有完整清单。
+
+**4. BSL 1.1 到底能不能商用？**
+源码全公开；非生产用途免费；生产/商用须向我们申请授权（申请通道待 GC 裁决后公布）；4 年后自动转 Apache 2.0。它不是 OSI 定义的 open source，我们不玩文字游戏。
+
+**5. 我的账号数据会经过你们的服务器吗？**
+不会。**零埋点**，自托管运行，不回传任何数据。远程拓扑默认 headscale 自托管；第三方云中继域名会被 healthcheck 直接判 FAIL。
+
+**6. 需要越狱 / root 吗？**
+不需要。iOS 走 WDA（用你自己的 Apple ID 签名，手机亲手解锁）；Android 走 helper APK（要无障碍/录屏权限，权限清单见 `packages/android-helper/PROTOCOL.md`）。
+
+**7. 生产环境能用吗？**
+Phase 1 是 mock 验证通过，还没发布。建议：先本地试玩（`examples/dual-demo` 无需手机）；生产等门 4b（真机复测）之后。进度见文末"待补证据链"。
+
+**8. 怎么给我的 agent 用？**
+三种：① 把本 README "用一段提示词让 AI 替你装"那节整段粘贴给 AI 助手；② MCP server（Phase 2）；③ 直接调 `@phonehands/core` 的统一 Action 接口（`read`/`observe`/`tap`…）。
+
+**9. 跑不起来怎么办？**
+先跑 `bash scripts/phonehands-doctor.sh`——只读体检，当场告诉你缺什么、给修复命令；再查 `docs/troubleshooting.md`（Top 10 排障）。还不行，公开后提 issue，贴上 doctor 的输出，我们按看到的顺序回。
+
 ## 更新记录
 
 见 [CHANGELOG.md](./CHANGELOG.md)（三段式：改了什么＋验证＋升级指引）。当前最新：v0.1.0（未发布）。
@@ -179,6 +214,17 @@ cd examples/dual-demo && npm test
 - **emazaheri/ios-agent**（MIT 公开口径，待 GC 裁决）—— 设备引擎架构与 WDA 客户端思路来源
 - **agentskills** 标准（Apache-2.0）—— skill frontmatter 规范
 - 洁净室学习：SideTap（ucsandman）签名运维思路、iPhone Use 深研、vanxh/instagram-personal-mcp（T2 安全模式）
+
+## 引用
+
+```bibtex
+@misc{phonehands,
+  title = {PhoneHands: two hands for your agent},
+  author = {PhoneHands Contributors},
+  howpublished = {\url{https://github.com/HUIIIM/phonehands}},
+  year = {2026}
+}
+```
 
 ## License
 

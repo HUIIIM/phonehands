@@ -9,9 +9,14 @@
 ![CI: planned](https://img.shields.io/badge/CI-planned-lightgrey)
 ![Docs: first batch](https://img.shields.io/badge/docs-first%20batch-green)
 
-> **Hero image placeholder (1200px+, one frame of a real phone operated by AI) — awaiting a real shoot. No AI-generated image will ever stand in for a real screenshot.**
+**When the API dies, the task still ships.** The other hand took over in 4 ms — 20 matches, every single one delivered.
 
-**One line: give your AI agent two hands — one speaks API (fast), one taps glass (real). When the API dies, the task doesn't.**
+> Hinge shipped an app update and the endpoint 403'd — all 20 matches still got read.
+> One script; the Router moved from the API engine to the device engine (real taps) on its own.
+
+![PhoneHands demo v2: the API died, the task still shipped](docs/assets/phonehands-demo-v2.gif)
+
+*Two hands for your agent — one speaks API (fast), one taps glass (real). Above is an 8-second cut; the full 32-second video ships with the release. Recorded from the real code path (local services); every log line is verbatim from a live run.*
 
 ## Honest disclosure
 
@@ -155,6 +160,32 @@ Actions defined in `@phonehands/core`; capability tables in each package's `capa
 
 More: [docs/troubleshooting.md](./docs/troubleshooting.md) (top 30).
 
+## FAQ (read this before filing an issue)
+
+**1. How is this different from iPhone Use?**
+iPhone Use is device-layer only (USB-tethered WDA). PhoneHands is dual-engine: an API engine (fast) plus a device engine (real), with Router auto-degrade — plus a third leg, one-command remote topology (one Mac command turns a phone into a self-hosted remote endpoint). We studied iPhone Use clean-room; credits below.
+
+**2. How fast does it switch when the API engine dies?**
+`degradeAfterFaults` is configurable: the demo switches after 1 4xx; production default is 3 (debounce). Every result carries a `degraded` flag — a degrade never happens silently.
+
+**3. Can it tap accurately on self-drawn UIs like WeChat?**
+Known limitation, no hype: when the accessibility tree is unavailable, `observe` falls back to the screenshot chain, but precise targeting on self-drawn UI is Phase 2 work. Full list in Honest disclosure §4.
+
+**4. BSL 1.1 — can I use it commercially?**
+Source fully public; free for non-production; production/commercial needs a license from us (channel announced after GC ruling); auto-converts to Apache 2.0 after 4 years. Not OSI open source — no word games.
+
+**5. Does my account data pass through your servers?**
+No. **Zero telemetry**, self-hosted, nothing phones home. Remote topology defaults to self-hosted headscale; third-party cloud relay domains fail the healthcheck outright.
+
+**6. Jailbreak / root required?**
+No. iOS goes through WDA (signed with your own Apple ID, phone unlocked by your hand); Android goes through the helper APK (accessibility/screen-record permissions, list in `packages/android-helper/PROTOCOL.md`).
+
+**7. Production-ready?**
+Phase 1 is mock-verified, unreleased. Start with local play (`examples/dual-demo`, no phone needed); production after gate 4b (real-device retest). See "Evidence backlog" below.
+
+**8. How do I plug it into my agent?**
+Three ways: ① paste the "One-prompt install" section into your AI assistant; ② MCP server (Phase 2); ③ call `@phonehands/core`'s unified Action interface directly (`read`/`observe`/`tap`…).
+
 ## Changelog
 
 [CHANGELOG.md](./CHANGELOG.md) — what changed + verification + upgrade guide. Latest: v0.1.0 (unreleased).
@@ -167,6 +198,17 @@ More: [docs/troubleshooting.md](./docs/troubleshooting.md) (top 30).
 - **emazaheri/ios-agent** (MIT per public page, pending GC ruling) — device-engine architecture ideas
 - **agentskills** standard (Apache-2.0) — skill frontmatter spec
 - Clean-room learnings: SideTap signing-ops, iPhone Use teardown, vanxh/instagram-personal-mcp (T2 patterns)
+
+## Cite
+
+```bibtex
+@misc{phonehands,
+  title = {PhoneHands: two hands for your agent},
+  author = {PhoneHands Contributors},
+  howpublished = {\url{https://github.com/HUIIIM/phonehands}},
+  year = {2026}
+}
+```
 
 ## License
 
