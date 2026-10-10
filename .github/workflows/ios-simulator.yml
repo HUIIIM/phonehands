@@ -129,8 +129,12 @@ jobs:
           # bootstatus -b blocks until the device is fully booted.
           xcrun simctl bootstatus "${{ steps.sim.outputs.udid }}" -b
           xcrun simctl install booted "${APP}"
-          # Bundle id of the WDA runner target (stable across appium releases).
-          xcrun simctl launch booted com.apple.test.WebDriverAgentRunner-Runner
+          # Do NOT hardcode the bundle id: the appium fork's WebDriverAgentRunner
+          # target uses com.facebook.WebDriverAgentRunner (verified 2026-10-10),
+          # not com.apple.test.WebDriverAgentRunner-Runner (old facebook repo).
+          BUNDLE_ID="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "${APP}/Info.plist")"
+          echo "Bundle id: ${BUNDLE_ID}"
+          xcrun simctl launch booted "${BUNDLE_ID}"
           echo "WDA runner launched"
 
       - name: Wait for WDA on http://127.0.0.1:8100
