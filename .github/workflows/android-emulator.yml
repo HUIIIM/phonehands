@@ -49,6 +49,12 @@ jobs:
       - name: Install JS dependencies
         run: npm ci --workspaces --include-workspace-root
 
+      - name: Install emulator host libs
+        # qemu-system-x86_64 dynamically links libpulse even with -no-audio;
+        # ubuntu-latest runners no longer ship it -> "error while loading
+        # shared libraries: libpulse.so.0" before the emulator even starts.
+        run: sudo apt-get update -y -qq && sudo apt-get install -y -qq libpulse0
+
       - name: Boot emulator + run protocol chain + real adb smoke
         uses: reactivecircus/android-emulator-runner@v2
         with:
