@@ -1,0 +1,22 @@
+PhoneHands — License status: Business Source License 1.1 (DRAFT, pending review)
+
+STATUS: NOT YET EFFECTIVE. This project is INTENDED to be licensed under the
+Business Source License 1.1 (BUSL-1.1), but the final terms are pending
+vertciti General Counsel review and have NOT been finalized. The BUSL-1.1
+parameters that a final license must set — Licensor, Change Date, Change
+License, and any Additional Use Grant — are deliberately NOT fixed here,
+because they are a legal/business decision, not an engineering one.
+
+Until this file is replaced with the finalized BUSL-1.1 text:
+
+  Copyright (c) 2026 vertciti (github.com/HUIIIM). All rights reserved.
+
+  No license is granted to copy, modify, distribute, sublicense, or use this
+  software, except as the copyright holder expressly permits in writing. This
+  repository is available for reference and internal vertciti use only.
+
+See the README for current status. When GC review completes, replace this
+file with the finalized BUSL-1.1 text (or the chosen license) and update the
+README badge and package.json accordingly.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND.
