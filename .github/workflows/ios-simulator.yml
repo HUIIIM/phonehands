@@ -35,6 +35,8 @@ on:
     # Weekly, Monday 09:00 UTC (05:00 ET) — cheap, off-peak.
     - cron: "0 9 * * 1"
 
+permissions:
+  contents: read
 jobs:
   wda-simulator:
     runs-on: macos-14
@@ -44,7 +46,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Select Xcode (newest 16.x on the image)
         run: |
@@ -61,7 +63,7 @@ jobs:
           xcodebuild -version
 
       - name: Set up Node.js 24
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: 24
           cache: npm
