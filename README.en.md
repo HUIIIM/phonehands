@@ -22,7 +22,7 @@
 
 | # | Topic | Stance |
 |---|-------|--------|
-| 1 | License | **BSL 1.1** (pending GC final text): source fully public; free for non-production; production/commercial needs a license from us (channel announced after GC ruling); auto-converts to Apache 2.0 after 4 years. Not OSI open source — no word games. |
+| 1 | License | **BSL 1.1** (pending GC final text): source fully public; free for non-production; production/commercial needs a license from us (applications via the contact surface at vertciti.com); auto-converts to Apache 2.0 after 4 years. Not OSI open source — no word games. |
 | 2 | ToS gray zone | Only **your own accounts**; read-only by default (writes are a compile-time switch); full audit log + one-key disconnect; never touches your passwords/OTPs (pause → you complete on your phone → resume). |
 | 3 | True wireless | **True cross-network wireless on iOS is Apple's wall — we don't promise it.** iOS: Mac + spare iPhone fixed topology, one command → remote endpoint. Android is wireless-first (phone dials out, no USB/LAN), in development. |
 | 4 | Telemetry | **Zero telemetry.** Self-hosted, nothing phones home ([ANALYTICS.md](./ANALYTICS.md)). |
@@ -172,7 +172,7 @@ iPhone Use is device-layer only (USB-tethered WDA). PhoneHands is dual-engine: a
 Known limitation, no hype: when the accessibility tree is unavailable, `observe` falls back to the screenshot chain, but precise targeting on self-drawn UI is Phase 2 work. Full list in Honest disclosure §4.
 
 **4. BSL 1.1 — can I use it commercially?**
-Source fully public; free for non-production; production/commercial needs a license from us (channel announced after GC ruling); auto-converts to Apache 2.0 after 4 years. Not OSI open source — no word games.
+Source fully public; free for non-production; production/commercial needs a license from us (applications via the contact surface at vertciti.com); auto-converts to Apache 2.0 after 4 years. Not OSI open source — no word games.
 
 **5. Does my account data pass through your servers?**
 No. **Zero telemetry**, self-hosted, nothing phones home. Remote topology defaults to self-hosted headscale; third-party cloud relay domains fail the healthcheck outright.
@@ -212,7 +212,7 @@ Three ways: ① paste the "One-prompt install" section into your AI assistant; �
 
 ## License
 
-**BSL 1.1 (pending GC final text).** Source fully public; free for non-production; production/commercial needs a license from us (channel announced after GC ruling); auto-converts to Apache 2.0 after 4 years.
+**BSL 1.1 (pending GC final text).** Source fully public; free for non-production; production/commercial needs a license from us (applications via the contact surface at vertciti.com); auto-converts to Apache 2.0 after 4 years.
 Header on every source file: `SPDX-License-Identifier: BUSL-1.1 (pending GC final review)`. Never MIT.
 Third-party notices: [THIRD_PARTY_NOTICES.md](./THIRD_PARTY_NOTICES.md).
 

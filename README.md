@@ -22,7 +22,7 @@
 
 | # | 事项 | 口径 |
 |---|------|------|
-| 1 | License | **BSL 1.1**（pending GC 最终文本）：源码全公开；非生产用途免费；生产/商用须向我们申请授权（申请通道待 GC 裁决后公布）；4 年后自动转 Apache 2.0。不是 OSI 定义的 open source，我们不玩文字游戏。 |
+| 1 | License | **BSL 1.1**（pending GC 最终文本）：源码全公开；非生产用途免费；生产/商用须向我们申请授权（授权申请经 vertciti.com 联系面）；4 年后自动转 Apache 2.0。不是 OSI 定义的 open source，我们不玩文字游戏。 |
 | 2 | ToS 灰色地带 | 只操作**你自己的账号**；默认只读模式（写操作是编译期开关，默认构建里根本不存在）；全程审计日志＋一键断连；框架永不经手你的密码和验证码（暂停→你本人手机上完成→继续）。 |
 | 3 | 真无线 | **iOS 跨网真无线是苹果的墙，我们不承诺**。iOS 当前路径：Mac＋备用 iPhone 固定拓扑，一条命令变成远程端点。Android 无线优先：手机主动向外连自托管 agent（同网/跨网均可，无须 USB/同局域网），实现中。 |
 | 4 | 埋点 | **零埋点**。自托管运行，不回传任何数据（详见 [ANALYTICS.md](./ANALYTICS.md)）。 |
@@ -184,7 +184,7 @@ iPhone Use 是纯设备层（USB 直连 WDA）。PhoneHands 是双引擎：API �
 这是已知局限，不画饼：accessibility 树不可用时走截图回退链（`observe` 自动降级），但自绘 UI 的精准定位仍在 Phase 2 攻坚。诚实声明第 4 条有完整清单。
 
 **4. BSL 1.1 到底能不能商用？**
-源码全公开；非生产用途免费；生产/商用须向我们申请授权（申请通道待 GC 裁决后公布）；4 年后自动转 Apache 2.0。它不是 OSI 定义的 open source，我们不玩文字游戏。
+源码全公开；非生产用途免费；生产/商用须向我们申请授权（授权申请经 vertciti.com 联系面）；4 年后自动转 Apache 2.0。它不是 OSI 定义的 open source，我们不玩文字游戏。
 
 **5. 我的账号数据会经过你们的服务器吗？**
 不会。**零埋点**，自托管运行，不回传任何数据。远程拓扑默认 headscale 自托管；第三方云中继域名会被 healthcheck 直接判 FAIL。
@@ -228,7 +228,7 @@ Phase 1 是 mock 验证通过，还没发布。建议：先本地试玩（`examp
 
 ## License
 
-**BSL 1.1 方向（pending GC 最终法律文本）**。源码全公开；非生产用途免费；生产/商用须向我们申请授权（申请通道待 GC 裁决后公布）；4 年后自动转 Apache 2.0。
+**BSL 1.1 方向（pending GC 最终法律文本）**。源码全公开；非生产用途免费；生产/商用须向我们申请授权（授权申请经 vertciti.com 联系面）；4 年后自动转 Apache 2.0。
 每个源文件头：`SPDX-License-Identifier: BUSL-1.1 (pending GC final review)`。永不 MIT。
 上游第三方声明：[THIRD_PARTY_NOTICES.md](./THIRD_PARTY_NOTICES.md)。
 
