@@ -2,36 +2,111 @@
 
 # PhoneHands
 
-[中文](./README.md) | [English](./README.en.md)
+A phone-control framework for AI agent developers: one Action interface over two engines, reads through the
+API (fast) and taps on a real device (real); when the API fails, the Router hands the task to the device
+engine and marks the result as degraded.
 
-![License: BSL 1.1 (pending GC)](https://img.shields.io/badge/license-BSL%201.1%20(pending%20GC)-blue)
-![Status: Phase 1 mock-verified](https://img.shields.io/badge/status-Phase%201%20mock--verified-yellow)
-![CI: planned](https://img.shields.io/badge/CI-planned-lightgrey)
-![Docs: first batch](https://img.shields.io/badge/docs-first%20batch-green)
+| | |
+|---|---|
+| Status | Phase 1 · v0.1.0, unreleased — mock-verified; iOS Simulator / Android Emulator protocol chains verified in GitHub Actions (manual + weekly); physical-device retest (gate 4b) pending hardware |
+| Deployment | Self-hosted: Node 22+ monorepo (npm workspaces); iOS devices need Mac + Xcode + USB iPhone; Android helper APK in development |
+| Live demo | Not applicable — a local library and scripts, no hosted service; local mock demo in [`examples/dual-demo`](./examples/dual-demo) |
+| Interfaces | TypeScript library (`@phonehands/core` unified Action interface) · command-line scripts (environment doctor, remote topology) |
+| Licence | Not finalised — BSL 1.1 intended, pending GC's final legal text; no LICENSE file in the repository yet |
+| Languages | [简体中文](./README.md) · English |
+| Contact | Security: no SECURITY.md yet · Product: [vertciti.com](https://vertciti.com) |
 
-**When the API dies, the task still ships.** The other hand took over in 4 ms — 20 matches, every single one delivered.
+The demo recording (8-second GIF, recorded from the real code path against local services) and product
+images are in [docs/assets](./docs/assets); the repository is private, so they are linked rather than embedded.
 
-> Hinge shipped an app update and the endpoint 403'd — all 20 matches still got read.
-> One script; the Router moved from the API engine to the device engine (real taps) on its own.
+## Overview
 
-![PhoneHands demo v2: the API died, the task still shipped](docs/assets/phonehands-demo-v2.gif)
+An agent can drive a phone two ways: call the app's HTTP endpoints, which is fast but breaks when the app
+updates, or tap the real screen, which is slower but closer to a person using the phone. PhoneHands puts both
+behind one unified Action interface: reads go to the API engine by default; on API 403/429/timeout the Router
+moves the same task to the device engine. Every result carries `backend` and `degraded` fields, so a
+degradation is never silent.
 
-*Two hands for your agent — one speaks API (fast), one taps glass (real). Above is an 8-second cut; the full 32-second video ships with the release. Recorded from the real code path (local services); every log line is verbatim from a live run.*
+The recorded scenario: after the Hinge endpoint returned 403, the device engine took over and read all 20
+matches; the device-side read took 4 ms (from that run's log).
 
-## Honest disclosure
+On day one you can build, test and run the mock degradation demo without a phone; with a Mac and an iPhone,
+one command turns the phone into a self-hosted remote endpoint.
 
-| # | Topic | Stance |
-|---|-------|--------|
-| 1 | License | **BSL 1.1** (pending GC final text): source fully public; free for non-production; production/commercial needs a license from us (channel announced after GC ruling); auto-converts to Apache 2.0 after 4 years. Not OSI open source — no word games. |
-| 2 | ToS gray zone | Only **your own accounts**; read-only by default (writes are a compile-time switch); full audit log + one-key disconnect; never touches your passwords/OTPs (pause → you complete on your phone → resume). |
-| 3 | True wireless | **True cross-network wireless on iOS is Apple's wall — we don't promise it.** iOS: Mac + spare iPhone fixed topology, one command → remote endpoint. Android is wireless-first (phone dials out, no USB/LAN), in development. |
-| 4 | Telemetry | **Zero telemetry.** Self-hosted, nothing phones home ([ANALYTICS.md](./ANALYTICS.md)). |
+## Capabilities
 
-**Phase 1 — mock-verified, unpublished.** Public release needs GC + CEO sign-off.
+| Action | What it does | Engine | Evidence |
+|--------|--------------|--------|----------|
+| `read` / `likes_received` / `matches` / `chat_messages` | Structured JSON reads of Hinge likes, matches and chat | API engine (read-only, compile-time locked) | `adapters/hinge` mock tests |
+| `observe` | Accessibility tree first, screenshot fallback | Device engine | `packages/device-backend` mock WDA tests |
+| `tap` / `swipe` / `type` / `press_home` / `screenshot` / `launch_app` | Taps, swipes and typing on a real phone | Device engine | Same; loopback-only asserted |
+| Auto-degrade | API 403/429/timeout → device takes over, `degraded:true` marked | Router | `@phonehands/core` fault-injection tests |
+| One-command remote topology | One Mac-side command → phone becomes a remote endpoint (self-hosted, no third-party cloud) | Scripts | `scripts/remote-topology/test-mock.sh` |
+| Environment doctor | `phonehands-doctor.sh` read-only check of node/npm/WDA signing/tunnel; each FAIL comes with a fix | Scripts | Read-only, changes nothing |
 
-## One-prompt install
+By engine:
 
-Paste to your AI assistant:
+| Action | API engine | iOS device engine | Android device engine |
+|--------|------------|-------------------|-----------------------|
+| `read` / `likes_received` / `matches` / `chat_messages` | supported (read-only) | — | — |
+| `observe` | — | supported (tree-first + screenshot fallback) | protocol frozen; device verification pending gate 4b |
+| `tap` / `swipe` / `type` / `press_home` / `screenshot` / `launch_app` | — | supported | protocol frozen; device verification pending gate 4b |
+
+Actions are defined in `@phonehands/core`; capability tables live in each package's `capabilities.ts`.
+
+## Quick start
+
+```bash
+git clone <repo-url> && cd phonehands   # repo-url published at public release
+npm install && npm run build && npm test
+cd examples/dual-demo && npm test       # mock degradation demo, no phone needed
+```
+
+### Prerequisites
+
+| Need | Requirement |
+|------|-------------|
+| Local dev (no phone) | node 22+, npm, git; `bash scripts/phonehands-doctor.sh` checks it all |
+| iOS device | Mac + Xcode + USB iPhone (WDA signed with your own Apple ID, phone unlocked by hand) |
+| Android device | Side-load the helper APK (source in `packages/android-helper`, in development) + a relay URL the agent can reach |
+
+Device setup: [docs/getting-started.md](./docs/getting-started.md).
+
+### One-command remote topology
+
+Mac: `bash scripts/remote-topology/setup.sh` (check → dependencies → WDA source → signing → USB forwarding →
+tunnel → endpoint). Android: helper APK (in development) + `PHONEHANDS_RELAY_URL`.
+Manual for non-technical operators: `scripts/remote-topology/DEPLOY.md`. No Mac? Run the mock:
+`bash scripts/remote-topology/test-mock.sh`.
+
+### Code examples
+
+**Read** (mock, no phone needed)
+
+```ts
+// adapters/hinge/tests/hinge-adapter.test.ts
+const hinge = new HingeApiAdapter({ baseUrl: mock.url, locale: { language: "en-US", region: "US" } });
+const likes = await hinge.likes_received({ limit: 20 }); // { ok, backend, latency_ms, degraded, evidence }
+```
+
+**Look + tap** (needs the device-engine link)
+
+```ts
+const tree = await wda.observe();                 // tree-first; screenshot fallback when unusable
+const pt = screenshotToTapPoint(shot, box, geom); // caller supplies normalized box → WDA coords
+await wda.tap(pt.x, pt.y);                        // single attempt; never replayed on timeout
+```
+
+**Degradation demo** (mock, no phone needed)
+
+```bash
+cd examples/dual-demo && npm test
+# scenario: read 20 matches → inject API 403 → device takes over, degraded:true in the envelope
+```
+
+### Install through an AI assistant
+
+Paste this to your AI assistant:
 
 ```text
 You are my PhoneHands deploy assistant. Read this repo's README.md first, then:
@@ -43,28 +118,7 @@ Stuck? Check docs/troubleshooting.md.
 Red line: Apple IDs / passwords / tokens go through my hands or env vars only — never into files or logs.
 ```
 
-## See it move in 30 seconds
-
-```bash
-git clone <repo-url> && cd phonehands   # repo-url announced on D-Day
-npm install && npm run build && npm test
-cd examples/dual-demo && npm test       # mock "API died, the task didn't" — no phone needed
-```
-
-## What it can do
-
-| Action | Example | Which hand | Evidence |
-|--------|---------|------------|----------|
-| `read` / `likes_received` / `matches` / `chat_messages` | Millisecond structured reads of Hinge data | API engine (read-only, compile-time locked) | `adapters/hinge` mock tests green |
-| `observe` | Accessibility-tree first, screenshot fallback | Device engine | `packages/device-backend` mock WDA tests |
-| `tap` / `swipe` / `type` / `press_home` / `screenshot` / `launch_app` | Real taps, swipes, typing on a real phone | Device engine | Same; loopback-only asserted |
-| Auto-degrade | API 403/429/timeout → device takes over, `degraded:true` marked | Router | `@phonehands/core` fault-injection tests |
-| One-command remote topology | One Mac-side command → phone becomes a remote endpoint (self-hosted) | Scripts | `test-mock.sh` 10/10 PASS |
-| Environment doctor | Read-only diagnosis: node/npm/WDA signing/tunnel, each FAIL ships a fix | Scripts | Read-only, changes nothing |
-
-**Not yet**: API writes (Phase 2); pixel-perfect locating on self-drawn UIs; 7-day signing without renewal; GitHub public / npm publish.
-
-## How the dual engine works
+## Architecture
 
 ```mermaid
 graph LR
@@ -77,71 +131,61 @@ graph LR
     Router -.->|API 403/429/timeout| DEVE
 ```
 
-**Degradation in one line**: API 403 → the device hand takes over. Every result carries `degraded`; uncertain actions are never replayed.
+- **Dual engines + auto-degrade**: reads via the API, writes via the device; each result's `degraded` field
+  says when a fallback happened. `degradeAfterFaults` is configurable: the demo switches after one 4xx;
+  three is recommended for production (debounce).
+- **Read-only is a compile-time switch**: write methods do not exist in read-only builds; enabling writes
+  means recompiling.
+- **No replay of uncertain actions**: timed-out or disconnected writes return `evidence.uncertain=true`; the
+  Router decides the next step and never retries blindly (MV427).
+- **Loopback-only by default**: the device link rejects non-loopback addresses, asserted in tests.
 
-## Install
+Details: [docs/architecture.md](./docs/architecture.md).
 
-### Prerequisites
+## Security and compliance
 
-| Need | Requirement |
-|------|-------------|
-| Local dev (no phone) | node 22+, npm, git; `bash scripts/phonehands-doctor.sh` checks it all |
-| iOS real device | Mac + Xcode + USB iPhone (WDA signed with your Apple ID, unlock by hand) |
-| Android real device | Side-load the helper APK (source in `packages/android-helper`, in development) + relay URL |
+- **Your own accounts only.** The API engine uses a reverse-engineered HTTP client, which sits in a grey area
+  of platform terms of service; it is read-only by default and write methods are absent from the default build.
+- **Audit and disconnect.** Full audit log and one-key disconnect.
+- **Credentials are never handled or stored by the framework.** It never touches passwords or OTPs (pause →
+  you complete on your phone → resume); session files are 0600, atomically written and zod-validated behind
+  a strict permission gate; OTPs only via a no-echo TTY; logs are redacted end to end.
+- **Zero telemetry.** Self-hosted; nothing is sent back ([ANALYTICS.md](./ANALYTICS.md)). Remote topology
+  defaults to self-hosted headscale; the healthcheck's relay-path validation fails third-party cloud relay domains.
+- **No jailbreak or root.** iOS uses WDA (signed with your own Apple ID); Android uses the helper APK
+  (accessibility / screen-record permissions, listed in `packages/android-helper/PROTOCOL.md`).
 
-1. `git clone <repo-url> && cd phonehands` (repo-url announced on D-Day)
-2. `npm install`
-3. `npm run build && npm test`
+There is no SECURITY.md vulnerability-reporting process in the repository yet.
 
-### One-command remote topology (the third leg)
+## Status and limitations
 
-Mac: `bash scripts/remote-topology/setup.sh`. Android: helper APK (in development) + `PHONEHANDS_RELAY_URL`.
-Non-technical manual: `scripts/remote-topology/DEPLOY.md`. No Mac? `bash scripts/remote-topology/test-mock.sh`.
+v0.1.0, unreleased. The repository is private; public release needs GC + CEO sign-off, and every npm package
+is `private: true`. No CI runs on pull requests yet; the workflows in place are the iOS Simulator and Android
+Emulator protocol chains (manual + weekly).
 
-## Quick start (copy-paste)
+**Not supported today**: API writes (Phase 2); precise targeting on self-drawn UIs such as WeChat; free Apple ID
+signing expires every 7 days and needs re-signing; true cross-network wireless on iOS (an Apple platform
+limit, not promised; the current path is a fixed Mac + spare iPhone topology); an MCP server (none exists).
 
-**1. Read** (mock, no phone needed)
+### Evidence backlog
 
-```ts
-// adapters/hinge/tests/hinge-adapter.test.ts — read the tests first
-const hinge = new HingeApiAdapter({ baseUrl: mock.url, locale: { language: "en-US", region: "US" } });
-const likes = await hinge.likes_received({ limit: 20 }); // { ok, backend, latency_ms, degraded, evidence }
-```
+| Claim | Status | Evidence due |
+|-------|--------|--------------|
+| Android helper APK on a real phone | In development (Kotlin source + protocol frozen) | After topology + spare device are ready (gate 4b) |
+| iOS remote topology on real hardware | Scripts written, mock passes | Same (gate 4b) |
+| Real-device degradation demo (dual-screen recording) | Demo script is mock-only | Same (gate 4b) |
+| npm public publish | Unpublished | After GC + CEO sign-off |
+| iOS Simulator real-WDA protocol chain (gate 4a) | In CI (`.github/workflows/ios-simulator.yml`, manual + weekly): real WDA built and launched on iPhone Simulator; `simulator-live.test.ts` runs session bootstrap / auto-heal / tree parse / screenshot / tap / swipe with no mocks | Landed |
+| Android Emulator protocol chain + adb smoke (gate 4a) | In CI (`.github/workflows/android-emulator.yml`, manual + weekly): e2e assertions + real adb tap/screencap on a real Android OS | Landed |
 
-**2. Look + tap** (needs the device-engine link)
+### Gate 4: two-tier verification (4a / 4b)
 
-```ts
-const tree = await wda.observe();                 // tree-first; screenshot fallback when unusable
-const pt = screenshotToTapPoint(shot, box, geom); // caller supplies normalized box → WDA coords
-await wda.tap(pt.x, pt.y);                        // single attempt; never replayed on timeout
-```
+| Tier | Runs | Proves | Does not prove |
+|---|---|---|---|
+| **4a (landed)** | GitHub Actions: real WDA on iPhone Simulator (macOS runner); real adb commands on Android Emulator | The full protocol the client speaks (session/settings/tree/screenshot/tap/swipe/auto-heal) works against real WDA and a real Android OS | Physical-device touch sampling, system dialogs, call/network interruptions, 7-day free-signing expiry, helper APK background persistence |
+| **4b (pending hardware)** | Mac Mini + spare iPhone + spare Android, physical | Everything 4a cannot prove | — |
 
-**3. Degradation demo** (mock, no phone needed)
-
-```bash
-cd examples/dual-demo && npm test
-# scenario: read 20 matches → inject API 403 → device takes over, degraded:true in the envelope
-```
-
-## Technical highlights
-
-1. **Dual engines + auto-degrade**: reads via API (milliseconds), writes via device (human-like); the task survives the API dying, degradation honestly marked.
-2. **Read-only is a compile-time switch**: write methods don't exist in read-only builds. Opening writes means recompiling yourself. Deliberate.
-3. **Never replay the uncertain**: timed-out/disconnected writes return `evidence.uncertain=true`; the Router decides next, never blind-retries.
-4. **Loopback-only by default**: the device link rejects non-loopback addresses, asserted in tests.
-5. **Secrets never land**: session file 0600/atomic-write/zod-validated + strict permission gate; OTPs only via no-echo TTY; redaction across the log path.
-6. **Self-hosted end to end**: topology defaults to self-hosted headscale (BSD-3); healthcheck's relay-path validation FAILs third-party cloud relay domains outright.
-7. **Docs are the contract**: every "supports X" here has test evidence; claims still waiting on a package are under "Evidence backlog".
-
-## Action matrix
-
-| Action | API engine | iOS device engine | Android device engine |
-|--------|------------|-------------------|-----------------------|
-| `read` / `likes_received` / `matches` / `chat_messages` | supported (read-only) | — | — |
-| `observe` | — | supported (tree-first + screenshot fallback) | supported (protocol frozen) |
-| `tap` / `swipe` / `type` / `press_home` / `screenshot` / `launch_app` | — | supported | supported (protocol frozen) |
-
-Actions defined in `@phonehands/core`; capability tables in each package's `capabilities.ts`.
+**Wording**: say "Simulator/Emulator protocol-chain verified", never "real-device testing passed".
 
 ## Troubleshooting (top 10)
 
@@ -152,54 +196,51 @@ Actions defined in `@phonehands/core`; capability tables in each package's `capa
 | Hinge 412 error | email verification challenge | `submitEmailChallenge()`, then complete it in your mailbox |
 | session load refused | file permissions loosened | delete `~/.phonehands/hinge.session.json`, re-run `loginInteractive()` |
 | OTP prompt refuses to run | non-TTY echo risk | run in a real terminal, not a pipe/CI |
-| frequent 429s | rate limited | built-in backoff honors Retry-After; serial queue throttled (800ms); don't parallelize |
+| frequent 429s | rate limited | built-in backoff honours Retry-After; serial queue throttled (800 ms); don't parallelise |
 | Android can't reach the agent | relay URL missing/unreachable | check `PHONEHANDS_RELAY_URL` (format in `packages/android-helper/PROTOCOL.md`) |
-| real device not recognized over USB | computer not trusted / usbmuxd down | tap "Trust" on the phone; Mac: `brew services start usbmuxd` |
+| device not recognised over USB | computer not trusted / usbmuxd down | tap "Trust" on the phone; Mac: `brew services start usbmuxd` |
 | write methods unavailable | Phase 1 API engine is compile-time read-only | by design; writes go through the device engine (Phase 2 expands) |
-| can't tell which hand acted | didn't read the envelope | every result carries `backend` + `degraded` — trust those fields |
+| can't tell which engine acted | envelope not read | every result carries `backend` + `degraded` — use those fields |
 
-More: [docs/troubleshooting.md](./docs/troubleshooting.md) (top 30).
+More: [docs/troubleshooting.md](./docs/troubleshooting.md).
 
-## FAQ (read this before filing an issue)
+## FAQ
 
-**1. How is this different from iPhone Use?**
-iPhone Use is device-layer only (USB-tethered WDA). PhoneHands is dual-engine: an API engine (fast) plus a device engine (real), with Router auto-degrade — plus a third leg, one-command remote topology (one Mac command turns a phone into a self-hosted remote endpoint). We studied iPhone Use clean-room; credits below.
+**How is this different from iPhone Use?**
+iPhone Use is device-layer only (USB-tethered WDA). PhoneHands is dual-engine (API + device) with Router
+auto-degrade, plus one-command remote topology. We studied iPhone Use clean-room; credits below.
 
-**2. How fast does it switch when the API engine dies?**
-`degradeAfterFaults` is configurable: the demo switches after 1 4xx; production default is 3 (debounce). Every result carries a `degraded` flag — a degrade never happens silently.
+**Does my account data pass through your servers?**
+No. Self-hosted, zero telemetry, nothing is sent back.
 
-**3. Can it tap accurately on self-drawn UIs like WeChat?**
-Known limitation, no hype: when the accessibility tree is unavailable, `observe` falls back to the screenshot chain, but precise targeting on self-drawn UI is Phase 2 work. Full list in Honest disclosure §4.
+**Is it production-ready?**
+No. Phase 1 is mock-verified and unreleased; wait for gate 4b (physical-device retest). You can run
+`examples/dual-demo` locally without a phone.
 
-**4. BSL 1.1 — can I use it commercially?**
-Source fully public; free for non-production; production/commercial needs a license from us (channel announced after GC ruling); auto-converts to Apache 2.0 after 4 years. Not OSI open source — no word games.
+**How do I plug it into my agent?**
+Call `@phonehands/core`'s unified Action interface (`read` / `observe` / `tap` …) directly, or hand the
+"Install through an AI assistant" section to your assistant. There is no MCP server today.
 
-**5. Does my account data pass through your servers?**
-No. **Zero telemetry**, self-hosted, nothing phones home. Remote topology defaults to self-hosted headscale; third-party cloud relay domains fail the healthcheck outright.
+**It won't run — what now?**
+Run `bash scripts/phonehands-doctor.sh` (read-only; it tells you what is missing and how to fix it), then
+check [docs/troubleshooting.md](./docs/troubleshooting.md).
 
-**6. Jailbreak / root required?**
-No. iOS goes through WDA (signed with your own Apple ID, phone unlocked by your hand); Android goes through the helper APK (accessibility/screen-record permissions, list in `packages/android-helper/PROTOCOL.md`).
+## Documentation · Support · Licence
 
-**7. Production-ready?**
-Phase 1 is mock-verified, unreleased. Start with local play (`examples/dual-demo`, no phone needed); production after gate 4b (real-device retest). See "Evidence backlog" below.
+[Getting started](./docs/getting-started.md) · [Architecture](./docs/architecture.md) ·
+[Troubleshooting](./docs/troubleshooting.md) · [Quality gates](./docs/quality-gates.md) ·
+[Release SOP](./docs/release-sop.md) · [Changelog](./CHANGELOG.md) (current: v0.1.0, unreleased) ·
+[Telemetry statement](./ANALYTICS.md)
 
-**8. How do I plug it into my agent?**
-Three ways: ① paste the "One-prompt install" section into your AI assistant; ② MCP server (Phase 2); ③ call `@phonehands/core`'s unified Action interface directly (`read`/`observe`/`tap`…).
+**Dependencies and credits** (every upstream in [THIRD_PARTY_NOTICES.md](./THIRD_PARTY_NOTICES.md)):
 
-## Changelog
-
-[CHANGELOG.md](./CHANGELOG.md) — what changed + verification + upgrade guide. Latest: v0.1.0 (unreleased).
-
-## Dependencies & credits
-
-[THIRD_PARTY_NOTICES.md](./THIRD_PARTY_NOTICES.md). Core credits:
-
-- **appium/WebDriverAgent** (BSD-3), **juanfont/headscale** (BSD-3)
-- **emazaheri/ios-agent** (MIT per public page, pending GC ruling) — device-engine architecture ideas
+- **appium/WebDriverAgent** (BSD-3) — UI automation service on iPhone
+- **juanfont/headscale** (BSD-3) — self-hosted WireGuard coordination
+- **emazaheri/ios-agent** (MIT per its public page, pending GC ruling) — device-engine architecture and WDA client ideas
 - **agentskills** standard (Apache-2.0) — skill frontmatter spec
-- Clean-room learnings: SideTap signing-ops, iPhone Use teardown, vanxh/instagram-personal-mcp (T2 patterns)
+- Clean-room learning: SideTap (ucsandman) signing operations, iPhone Use, vanxh/instagram-personal-mcp (T2 patterns)
 
-## Cite
+**Cite**
 
 ```bibtex
 @misc{phonehands,
@@ -210,33 +251,12 @@ Three ways: ① paste the "One-prompt install" section into your AI assistant; �
 }
 ```
 
-## License
+**Licence: not finalised.** BSL 1.1 is intended, pending GC's final legal text: source available; free for
+non-production use; production/commercial use needs a licence from us (channel announced after the GC ruling);
+converts to Apache 2.0 after 4 years. BSL is not an OSI-approved open-source licence. The intended licence is
+not MIT. Every source file carries `SPDX-License-Identifier: BUSL-1.1 (pending GC final review)`. There is no
+LICENSE file in the repository yet.
 
-**BSL 1.1 (pending GC final text).** Source fully public; free for non-production; production/commercial needs a license from us (channel announced after GC ruling); auto-converts to Apache 2.0 after 4 years.
-Header on every source file: `SPDX-License-Identifier: BUSL-1.1 (pending GC final review)`. Never MIT.
-Third-party notices: [THIRD_PARTY_NOTICES.md](./THIRD_PARTY_NOTICES.md).
+---
 
-## Evidence backlog (docs-as-contract gate)
-
-| Claim | Status | Evidence ETA |
-|-------|--------|--------------|
-| Android helper APK on a real phone | In development (Kotlin source + protocol frozen) | After topology + spare device ready (gate 4b) |
-| iOS topology on real hardware | Scripts written + mock 10/10 PASS | Same as above (gate 4b) |
-| Real-device degrade demo (dual-screen recording) | Demo script is mock-only | Same (gate 4b) |
-| npm public publish | All packages `private: true`, unpublished | After GC + CEO dual sign-off |
-| iOS Simulator real-WDA protocol chain (gate 4a) | ✅ In CI (`.github/workflows/ios-simulator.yml`, manual + weekly): real WDA built + launched on iPhone Simulator; `simulator-live.test.ts` runs session bootstrap / real auto-heal / tree parse / screenshot / tap / swipe with zero mocks | Landed |
-| Android Emulator protocol chain + adb smoke (gate 4a) | ✅ In CI (`.github/workflows/android-emulator.yml`, manual + weekly): e2e assertions + real adb tap/screencap on a real Android OS | Landed |
-| CI badge lit | Workflows ready | Lights up after public release |
-
-### Gate 4: two-tier verification (4a / 4b) — read before quoting our test results
-
-| Tier | Runs | Proves | Does NOT prove |
-|---|---|---|---|
-| **4a (landed, $0)** | GitHub Actions: real WDA on iPhone Simulator (macOS runner); real adb commands on Android Emulator | The **full protocol** our client speaks (session/settings/tree/screenshot/tap/swipe/auto-heal) works against **real WDA and a real Android OS** | Physical-device touch sampling, system dialogs, call/network interruptions, 7-day free-signing expiry, helper APK background persistence |
-| **4b (pending hardware)** | Mac Mini + spare iPhone + spare Android, physical | Everything 4a cannot prove | — |
-
-**Wording red line**: always say "Simulator/Emulator protocol-chain verified"; **never** say "real-device testing passed". Calling 4a real-device testing is misrepresentation — one strike and the claim is pulled.
-
-## Star History
-
-[![Star History Chart](https://api.star-history.com/svg?repos=HUIIIM/phonehands&type=date)](https://star-history.com/#HUIIIM/phonehands&date)
+Built by [vertciti](https://vertciti.com).
