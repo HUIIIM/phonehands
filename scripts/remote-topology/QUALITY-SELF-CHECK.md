@@ -1,4 +1,4 @@
-# SPDX-License-Identifier: BUSL-1.1 (pending GC final review)
+# SPDX-License-Identifier: BUSL-1.1
 
 # 质量门禁自检表 — PhoneHands scripts 包
 # （remote-topology + phonehands-doctor.sh，董事长 2026-10-09 21:4x 质量令）

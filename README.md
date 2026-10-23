@@ -1,10 +1,10 @@
-<!-- SPDX-License-Identifier: BUSL-1.1 (pending GC final review) -->
+<!-- SPDX-License-Identifier: BUSL-1.1 -->
 
 # PhoneHands
 
 [中文](./README.md) | [English](./README.en.md)
 
-![License: BSL 1.1 (pending GC)](https://img.shields.io/badge/license-BSL%201.1%20(pending%20GC)-blue)
+![License: BSL 1.1](https://img.shields.io/badge/license-BSL%201.1-blue)
 ![Status: Phase 1 mock-verified](https://img.shields.io/badge/status-Phase%201%20mock--verified-yellow)
 ![CI: planned](https://img.shields.io/badge/CI-planned-lightgrey)
 ![Docs: first batch](https://img.shields.io/badge/docs-first%20batch-green)
@@ -22,7 +22,7 @@
 
 | # | 事项 | 口径 |
 |---|------|------|
-| 1 | License | **BSL 1.1**（pending GC 最终文本）：源码全公开；非生产用途免费；生产/商用须向我们申请授权（授权申请经 vertciti.com 联系面）；4 年后自动转 Apache 2.0。不是 OSI 定义的 open source，我们不玩文字游戏。 |
+| 1 | License | **BSL 1.1**：源码全公开；非生产用途免费；生产/商用须向我们申请授权（授权申请经 vertciti.com 联系面）；4 年后自动转 Apache 2.0。不是 OSI 定义的 open source，我们不玩文字游戏。 |
 | 2 | ToS 灰色地带 | 只操作**你自己的账号**；默认只读模式（写操作是编译期开关，默认构建里根本不存在）；全程审计日志＋一键断连；框架永不经手你的密码和验证码（暂停→你本人手机上完成→继续）。 |
 | 3 | 真无线 | **iOS 跨网真无线是苹果的墙，我们不承诺**。iOS 当前路径：Mac＋备用 iPhone 固定拓扑，一条命令变成远程端点。Android 无线优先：手机主动向外连自托管 agent（同网/跨网均可，无须 USB/同局域网），实现中。 |
 | 4 | 埋点 | **零埋点**。自托管运行，不回传任何数据（详见 [ANALYTICS.md](./ANALYTICS.md)）。 |
@@ -228,8 +228,8 @@ Phase 1 是 mock 验证通过，还没发布。建议：先本地试玩（`examp
 
 ## License
 
-**BSL 1.1 方向（pending GC 最终法律文本）**。源码全公开；非生产用途免费；生产/商用须向我们申请授权（授权申请经 vertciti.com 联系面）；4 年后自动转 Apache 2.0。
-每个源文件头：`SPDX-License-Identifier: BUSL-1.1 (pending GC final review)`。永不 MIT。
+**BSL 1.1 方向**。源码全公开；非生产用途免费；生产/商用须向我们申请授权（授权申请经 vertciti.com 联系面）；4 年后自动转 Apache 2.0。
+每个源文件头：`SPDX-License-Identifier: BUSL-1.1`。永不 MIT。
 上游第三方声明：[THIRD_PARTY_NOTICES.md](./THIRD_PARTY_NOTICES.md)。
 
 ## 待补证据链（文档即契约门禁）

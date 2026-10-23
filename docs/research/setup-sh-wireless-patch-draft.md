@@ -98,7 +98,7 @@ fi
 
 ```python
 #!/usr/bin/env python3
-# SPDX-License-Identifier: BUSL-1.1 (pending GC final review)
+# SPDX-License-Identifier: BUSL-1.1
 # wifi-relay: dumb TCP relay 127.0.0.1:<local_port> -> <phone_ip>:8100
 # so the rest of the chain (tunnel/endpoint/healthcheck) stays loopback-only.
 # No secrets, no logic — pure byte pipe. [待真机验证]

@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: BUSL-1.1 (pending GC final review)
+// SPDX-License-Identifier: BUSL-1.1
 //
 // phonehands · examples/dual-demo — "API died, the task didn't"
 // ==========================================================

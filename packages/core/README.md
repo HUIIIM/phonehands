@@ -52,4 +52,4 @@ importing them throws. Not a runtime flag.
 | loopback-only posture (core is transport-free) | `test/security.test.js`: no network imports in `src/` |
 | BSL-1.1 headers, no MIT | `test/security.test.js` header scan |
 
-License: `SPDX-License-Identifier: BUSL-1.1 (pending GC final review)`. Never MIT.
+License: `SPDX-License-Identifier: BUSL-1.1`. Never MIT.

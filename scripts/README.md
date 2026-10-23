@@ -1,4 +1,4 @@
-# SPDX-License-Identifier: BUSL-1.1 (pending GC final review)
+# SPDX-License-Identifier: BUSL-1.1
 
 # PhoneHands scripts
 
@@ -18,6 +18,6 @@ bash 工具包（`set -euo pipefail`，幂等可重跑）。
 
 ## 约定
 
-- 所有 `.sh` 文件头含 `SPDX-License-Identifier: BUSL-1.1 (pending GC final review)`，永不 MIT。
+- 所有 `.sh` 文件头含 `SPDX-License-Identifier: BUSL-1.1`，永不 MIT。
 - secret 永不进脚本、永不进日志（Apple ID/密码/token 只走用户亲手操作或环境变量，日志脱敏）。
 - 改系统配置前先 echo 提示并征得确认（`--yes` 可跳过）。

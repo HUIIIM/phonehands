@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: BUSL-1.1 (pending GC final review)
+// SPDX-License-Identifier: BUSL-1.1
 // Action registry: which actions exist in THIS build, and which backends
 // are registered. Write actions are registered only in full builds.
 

@@ -1,10 +1,10 @@
-<!-- SPDX-License-Identifier: BUSL-1.1 (pending GC final review) -->
+<!-- SPDX-License-Identifier: BUSL-1.1 -->
 
 # PhoneHands
 
 [中文](./README.md) | [English](./README.en.md)
 
-![License: BSL 1.1 (pending GC)](https://img.shields.io/badge/license-BSL%201.1%20(pending%20GC)-blue)
+![License: BSL 1.1](https://img.shields.io/badge/license-BSL%201.1-blue)
 ![Status: Phase 1 mock-verified](https://img.shields.io/badge/status-Phase%201%20mock--verified-yellow)
 ![CI: planned](https://img.shields.io/badge/CI-planned-lightgrey)
 ![Docs: first batch](https://img.shields.io/badge/docs-first%20batch-green)
@@ -22,7 +22,7 @@
 
 | # | Topic | Stance |
 |---|-------|--------|
-| 1 | License | **BSL 1.1** (pending GC final text): source fully public; free for non-production; production/commercial needs a license from us (applications via the contact surface at vertciti.com); auto-converts to Apache 2.0 after 4 years. Not OSI open source — no word games. |
+| 1 | License | **BSL 1.1**: source fully public; free for non-production; production/commercial needs a license from us (applications via the contact surface at vertciti.com); auto-converts to Apache 2.0 after 4 years. Not OSI open source — no word games. |
 | 2 | ToS gray zone | Only **your own accounts**; read-only by default (writes are a compile-time switch); full audit log + one-key disconnect; never touches your passwords/OTPs (pause → you complete on your phone → resume). |
 | 3 | True wireless | **True cross-network wireless on iOS is Apple's wall — we don't promise it.** iOS: Mac + spare iPhone fixed topology, one command → remote endpoint. Android is wireless-first (phone dials out, no USB/LAN), in development. |
 | 4 | Telemetry | **Zero telemetry.** Self-hosted, nothing phones home ([ANALYTICS.md](./ANALYTICS.md)). |
@@ -212,8 +212,8 @@ Three ways: ① paste the "One-prompt install" section into your AI assistant; �
 
 ## License
 
-**BSL 1.1 (pending GC final text).** Source fully public; free for non-production; production/commercial needs a license from us (applications via the contact surface at vertciti.com); auto-converts to Apache 2.0 after 4 years.
-Header on every source file: `SPDX-License-Identifier: BUSL-1.1 (pending GC final review)`. Never MIT.
+**BSL 1.1.** Source fully public; free for non-production; production/commercial needs a license from us (applications via the contact surface at vertciti.com); auto-converts to Apache 2.0 after 4 years.
+Header on every source file: `SPDX-License-Identifier: BUSL-1.1`. Never MIT.
 Third-party notices: [THIRD_PARTY_NOTICES.md](./THIRD_PARTY_NOTICES.md).
 
 ## Evidence backlog (docs-as-contract gate)

@@ -1,6 +1,6 @@
 # PhoneHands Android 部署文档
 
-<!-- SPDX-License-Identifier: BUSL-1.1 (pending GC final review) -->
+<!-- SPDX-License-Identifier: BUSL-1.1 -->
 
 > 面向备用 Android 手机的部署说明。按本文走完，一部手机变成 agent 的
 > 无线手。所有"依据"列在每节末尾 —— 门 3（文档即契约）：写"支持 X"
