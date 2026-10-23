@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="360" viewBox="0 0 1280 360">
+<rect width="1280" height="360" fill="#000000"/>
+<rect x="0" y="0" width="10" height="360" fill="#FF4713"/>
+<text x="64" y="72" font-family="'Nunito Sans','PingFang SC','Hiragino Sans GB','Microsoft YaHei','Noto Sans SC',sans-serif" font-size="19" font-weight="700" letter-spacing="4" fill="#FF4713">VERTCITI · PHONE-AGENT FRAMEWORK</text>
+<text x="62" y="196" font-family="'Nunito Sans','PingFang SC','Hiragino Sans GB','Microsoft YaHei','Noto Sans SC',sans-serif" font-size="84" font-weight="900" fill="#FFFFFF">PhoneHands</text>
+<text x="64" y="252" font-family="'Nunito Sans','PingFang SC','Hiragino Sans GB','Microsoft YaHei','Noto Sans SC',sans-serif" font-size="29" font-weight="400" fill="#DEDEDE">Two hands for your agent — one speaks API (fast),</text>
+<text x="64" y="292" font-family="'Nunito Sans','PingFang SC','Hiragino Sans GB','Microsoft YaHei','Noto Sans SC',sans-serif" font-size="29" font-weight="400" fill="#DEDEDE">one taps glass (real). If the API dies, the task still ships.</text>
+<line x1="64" y1="292" x2="1216" y2="292" stroke="#DEDEDE" stroke-width="1"/>
+<g font-family="'Nunito Sans','PingFang SC','Hiragino Sans GB','Microsoft YaHei','Noto Sans SC',sans-serif" font-size="20" font-weight="600" fill="#DEDEDE">
+<text x="64" y="330">Dual-engine + Router auto-degrade</text>
+<text x="454" y="330">·</text>
+<text x="480" y="330">Phase 1 · mock-verified</text>
+<text x="754" y="330">·</text>
+<text x="780" y="330">BUSL-1.1 (pending GC)</text>
+</g></svg>
