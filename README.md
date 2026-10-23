@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: BUSL-1.1 (pending GC final review) -->
+<!-- SPDX-License-Identifier: BUSL-1.1 -->
 
 # PhoneHands
 
@@ -10,17 +10,17 @@
 | 部署 | 自托管：Node 22+ monorepo（npm workspaces）；iOS 真机需 Mac＋Xcode＋USB iPhone；Android helper APK 实现中 |
 | 在线演示 | 不适用：本地库与脚本，没有托管服务；本地 mock 演示见 [`examples/dual-demo`](./examples/dual-demo) |
 | 接口 | TypeScript 库（`@phonehands/core` 统一 Action 接口）· 命令行脚本（环境体检、远程拓扑） |
-| 许可证 | 未定稿：拟采用 BSL 1.1，待 GC 最终法律文本；仓库尚无 LICENSE 文件 |
+| 许可证 | BUSL-1.1（[LICENSE](LICENSE)），许可方 VERTCITY LLC |
 | 语言 | 简体中文 · [English](./README.en.md) |
 | 联系 | 安全：暂无 SECURITY.md · 产品：[vertciti.com](https://vertciti.com) |
 
-演示录屏（8 秒 GIF，真实代码链路、本地服务录制）和产品图在 [docs/assets](./docs/assets)；仓库为私有，因此这里只给链接、不内嵌图片。
+演示录屏（8 秒 GIF，真实代码链路、本地服务录制）和产品图在 [docs/assets](./docs/assets)；这里只给链接、不内嵌图片。
 
 ## 概览
 
 agent 操作手机有两条路：调 App 的 HTTP 接口，速度快但会因 App 更新而失效；在真机上点屏，慢一些但更接近真人操作。PhoneHands 把两条路放在一个统一 Action 接口后面：读取默认走 API 引擎；API 返回 403/429/超时时，Router 切到设备引擎接管同一个任务，每个结果都带 `backend` 和 `degraded` 字段，降级不会悄悄发生。
 
-录屏里的场景：Hinge 接口返回 403 后，设备引擎接上，20 条 matches 全部读出，设备端 read 耗时 4 毫秒（取自该次运行日志）。
+录屏里的场景：Hinge 接口返回 403 后，设备引擎接上，20 条 matches 全部读出。
 
 第一天能做的：在没有手机的情况下跑通构建、测试和 mock 降级演示；有 Mac＋iPhone 时，用一条命令把手机变成自托管的远程端点。
 
@@ -145,7 +145,7 @@ graph LR
 
 ## 现状与边界
 
-v0.1.0，未发布。仓库保持 private，公开发布需 GC＋CEO 双终审；npm 包全部 `private: true`。仓库目前没有在 PR 上运行的 CI；已接入的 workflow 是 iOS Simulator 与 Android Emulator 协议链（手动＋每周）。
+v0.1.0，未发布。仓库已公开（GC 放行 GC-20261022-024）；npm 包全部 `private: true`，未发布。仓库目前没有在 PR 上运行的 CI；已接入的 workflow 是 iOS Simulator 与 Android Emulator 协议链（手动＋每周）。
 
 **目前做不到**：API 写操作（Phase 2）；微信类自绘 UI 的精准定位；免费 Apple ID 签名 7 天有效期需续签；iOS 跨网真无线（受苹果平台限制，不承诺；当前路径是 Mac＋备用 iPhone 固定拓扑）；MCP 服务（目前没有）。
 
@@ -228,7 +228,7 @@ iPhone Use 是纯设备层（USB 直连 WDA）。PhoneHands 是双引擎（API�
 }
 ```
 
-**许可证：未定稿。** 拟采用 BSL 1.1（待 GC 最终法律文本）：源码公开；非生产用途免费；生产/商用须向我们申请授权（申请通道待 GC 裁决后公布）；4 年后自动转 Apache 2.0。BSL 不是 OSI 定义的开源许可证。拟定方向不是 MIT。每个源文件头：`SPDX-License-Identifier: BUSL-1.1 (pending GC final review)`。仓库目前没有 LICENSE 文件。
+**许可证：BUSL-1.1。** 源码公开；非生产用途免费；生产/商用须向许可方 VERTCITY LLC 申请商业授权；各版本自首次公开发行满 4 年转 Apache 2.0。BUSL 不是 OSI 定义的开源许可证。全文见 [LICENSE](LICENSE)。
 
 ---
 

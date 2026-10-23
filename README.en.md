@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: BUSL-1.1 (pending GC final review) -->
+<!-- SPDX-License-Identifier: BUSL-1.1 -->
 
 # PhoneHands
 
@@ -12,12 +12,12 @@ engine and marks the result as degraded.
 | Deployment | Self-hosted: Node 22+ monorepo (npm workspaces); iOS devices need Mac + Xcode + USB iPhone; Android helper APK in development |
 | Live demo | Not applicable — a local library and scripts, no hosted service; local mock demo in [`examples/dual-demo`](./examples/dual-demo) |
 | Interfaces | TypeScript library (`@phonehands/core` unified Action interface) · command-line scripts (environment doctor, remote topology) |
-| Licence | Not finalised — BSL 1.1 intended, pending GC's final legal text; no LICENSE file in the repository yet |
+| Licence | BUSL-1.1 ([LICENSE](LICENSE)), licensor VERTCITY LLC |
 | Languages | [简体中文](./README.md) · English |
 | Contact | Security: no SECURITY.md yet · Product: [vertciti.com](https://vertciti.com) |
 
 The demo recording (8-second GIF, recorded from the real code path against local services) and product
-images are in [docs/assets](./docs/assets); the repository is private, so they are linked rather than embedded.
+images are in [docs/assets](./docs/assets); they are linked rather than embedded.
 
 ## Overview
 
@@ -28,7 +28,7 @@ moves the same task to the device engine. Every result carries `backend` and `de
 degradation is never silent.
 
 The recorded scenario: after the Hinge endpoint returned 403, the device engine took over and read all 20
-matches; the device-side read took 4 ms (from that run's log).
+matches.
 
 On day one you can build, test and run the mock degradation demo without a phone; with a Mac and an iPhone,
 one command turns the phone into a self-hosted remote endpoint.
@@ -159,7 +159,7 @@ There is no SECURITY.md vulnerability-reporting process in the repository yet.
 
 ## Status and limitations
 
-v0.1.0, unreleased. The repository is private; public release needs GC + CEO sign-off, and every npm package
+v0.1.0, unreleased. The repository is public (released under GC-20261022-024), and every npm package
 is `private: true`. No CI runs on pull requests yet; the workflows in place are the iOS Simulator and Android
 Emulator protocol chains (manual + weekly).
 
@@ -251,11 +251,7 @@ check [docs/troubleshooting.md](./docs/troubleshooting.md).
 }
 ```
 
-**Licence: not finalised.** BSL 1.1 is intended, pending GC's final legal text: source available; free for
-non-production use; production/commercial use needs a licence from us (channel announced after the GC ruling);
-converts to Apache 2.0 after 4 years. BSL is not an OSI-approved open-source licence. The intended licence is
-not MIT. Every source file carries `SPDX-License-Identifier: BUSL-1.1 (pending GC final review)`. There is no
-LICENSE file in the repository yet.
+**Licence: BUSL-1.1.** Source available; free for non-production use; production or commercial use requires a commercial licence from the licensor, VERTCITY LLC; each version converts to Apache 2.0 four years after its first public distribution. BUSL is not an OSI-approved open-source licence. Full text: [LICENSE](LICENSE).
 
 ---
 
