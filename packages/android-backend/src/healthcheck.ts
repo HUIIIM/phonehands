@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: BUSL-1.1 (pending GC final review)
+// SPDX-License-Identifier: BUSL-1.1
 
 /**
  * Relay healthcheck — the unified JSON schema shared with the iOS side:

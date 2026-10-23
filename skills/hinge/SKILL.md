@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: BUSL-1.1 (pending GC final review) -->
+<!-- SPDX-License-Identifier: BUSL-1.1 -->
 ---
 name: hinge
 description: Read-only access to Hinge dating data (likes received, matches, chat messages) through the phonehands API engine. Use when the agent needs to READ Hinge data fast as structured JSON. Do NOT use for any write (like/skip/send message), for Google/Apple SSO login, or for OTP-walled flows -- those go to the device engine. Only ever operates on the user's own account.
@@ -84,5 +84,5 @@ device (human-like). When the API dies, the device takes over.**
 
 phonehands is BSL 1.1 direction (source public, non-production free,
 production/commercial use requires our authorization; converts to Apache 2.0
-after 4 years). Final legal text pending GC review -- do not treat this
+after 4 years). The governing legal text is the LICENSE file in this repository -- do not treat this
 skill's summary as the license.

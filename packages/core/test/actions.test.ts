@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: BUSL-1.1 (pending GC final review)
+// SPDX-License-Identifier: BUSL-1.1
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
 import { ACTION_PRIVILEGE, ALL_ACTION_NAMES, WRITE_ACTION_NAMES } from "../src/actions.ts";

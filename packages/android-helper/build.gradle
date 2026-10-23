@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: BUSL-1.1 (pending GC final review)
+// SPDX-License-Identifier: BUSL-1.1
 // Top-level build file. Requires Android Gradle Plugin 8.x + Android SDK 34.
 // Build (on a machine with the Android SDK):
 //   ./gradlew :app:assembleDebug

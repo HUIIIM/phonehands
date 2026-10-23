@@ -1,4 +1,4 @@
-# SPDX-License-Identifier: BUSL-1.1 (pending GC final review)
+# SPDX-License-Identifier: BUSL-1.1
 
 # remote-topology — PhoneHands 的"第三条腿"：一键远程拓扑
 

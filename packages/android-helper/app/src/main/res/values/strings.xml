@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: BUSL-1.1 (pending GC final review) -->
+<!-- SPDX-License-Identifier: BUSL-1.1 -->
 <resources>
     <string name="app_name">phonehands helper</string>
     <string name="a11y_description">phonehands helper performs taps and swipes on your behalf when your AI agent asks it to. It never reads passwords or verification codes; login screens are handed back to you on the phone.</string>

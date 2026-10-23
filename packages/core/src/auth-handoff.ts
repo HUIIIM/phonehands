@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: BUSL-1.1 (pending GC final review)
+// SPDX-License-Identifier: BUSL-1.1
 // Auth handoff protocol (hinge-mcp P2 spirit, phonehands MV424).
 //
 // When a backend hits an auth wall (password / Face ID / SMS code screen)

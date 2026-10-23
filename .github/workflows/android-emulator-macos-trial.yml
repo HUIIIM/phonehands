@@ -1,0 +1,54 @@
+# SPDX-License-Identifier: BUSL-1.1
+#
+# TRIAL ONLY — macos-runner validation for gate-4a Android.
+# Board-approved trial (2026-10-10): verifies the Android emulator boots with
+# hardware acceleration on a macOS hosted runner after the Linux KVM path
+# failed (udev 0666 workaround ineffective on ubuntu-latest).
+#
+# Cost: ~$0.08/min. Expected 25-45 min per run => ~$2-4 per trial.
+# This workflow is workflow_dispatch ONLY. It does NOT replace
+# android-emulator.yml. Full migration only after this trial goes green.
+
+name: "trial · Android Emulator on macOS (gate-4a validation)"
+
+on:
+  workflow_dispatch: {}
+
+jobs:
+  android-emulator-macos:
+    runs-on: macos-14
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install JS dependencies
+        run: npm ci --workspaces --include-workspace-root
+
+      - name: Boot emulator + run protocol chain + real adb smoke
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 30
+          target: default
+          arch: x86_64
+          profile: pixel_7
+          emulator-options: -no-snapshot -no-audio -no-boot-anim -camera-back none
+          script: |
+            set -euo pipefail
+            adb wait-for-device
+            SERIAL="$(adb get-serialno)"
+            echo "Emulator serial: ${SERIAL}"
+            echo "--- 1/3 android-backend suite (real TCP/WS, mock phone) ---"
+            npm test --workspace=@phonehands/android-backend
+            echo "--- 2/3 wireless-demo assertions ---"
+            PHONEHANDS_RELAY_URL="ws://127.0.0.1:8099/phonehands-android" \
+              node examples/android-wireless-demo/demo.ts
+            echo "--- 3/3 real adb smoke (real Android OS, our cmd builders) ---"
+            ANDROID_SERIAL="${SERIAL}" node examples/android-wireless-demo/emulator-smoke.ts

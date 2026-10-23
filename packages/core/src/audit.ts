@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: BUSL-1.1 (pending GC final review)
+// SPDX-License-Identifier: BUSL-1.1
 // Audit log with defense-in-depth secret redaction.
 //
 // Primary rule (MV421 / 立项书 §3.4): secrets NEVER enter logs —

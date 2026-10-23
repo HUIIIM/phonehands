@@ -1,6 +1,6 @@
 # Android 包质量门禁自检表（2026-10-09）
 
-<!-- SPDX-License-Identifier: BUSL-1.1 (pending GC final review) -->
+<!-- SPDX-License-Identifier: BUSL-1.1 -->
 
 > 包：`packages/android-backend`（TS）＋ `packages/android-helper`（Kotlin APK）
 > ＋ `examples/android-wireless-demo`。标准：`docs/quality-gates.md`。
