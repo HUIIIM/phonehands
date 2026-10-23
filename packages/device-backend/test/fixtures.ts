@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: BUSL-1.1 (pending GC final review)
+// SPDX-License-Identifier: BUSL-1.1
 
 /**
  * Fixed accessibility-tree fixture returned by the mock WDA server

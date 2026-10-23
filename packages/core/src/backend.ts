@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: BUSL-1.1 (pending GC final review)
+// SPDX-License-Identifier: BUSL-1.1
 // Backend contract: every engine (api, device-ios, device-android, ...) is a
 // Backend that declares WHAT it can do via `capabilities`. The Router routes
 // by table lookup, never by hardcoded if-else chains (立项书 §2.4 诚实边界).

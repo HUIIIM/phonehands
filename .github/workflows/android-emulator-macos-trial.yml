@@ -1,4 +1,4 @@
-# SPDX-License-Identifier: BUSL-1.1 (pending GC final review)
+# SPDX-License-Identifier: BUSL-1.1
 #
 # TRIAL ONLY — macos-runner validation for gate-4a Android.
 # Board-approved trial (2026-10-10): verifies the Android emulator boots with

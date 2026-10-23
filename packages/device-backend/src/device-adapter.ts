@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: BUSL-1.1 (pending GC final review)
+// SPDX-License-Identifier: BUSL-1.1
 
 /**
  * DeviceAdapter protocol — the device abstraction the Router programs against.

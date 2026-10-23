@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: BUSL-1.1 (pending GC final review)
+// SPDX-License-Identifier: BUSL-1.1
 // Security gate tests for @phonehands/core:
 //  - BSL license header present on every .ts file (never MIT)
 //  - core opens no network sockets: no network module imports in src
@@ -9,7 +9,7 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
 
-const HEADER = "// SPDX-License-Identifier: BUSL-1.1 (pending GC final review)";
+const HEADER = "// SPDX-License-Identifier: BUSL-1.1";
 const PKG_ROOT = path.join(import.meta.dirname, "..");
 
 function tsFiles(dir: string): string[] {

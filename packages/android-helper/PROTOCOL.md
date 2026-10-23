@@ -1,6 +1,6 @@
 # phonehands Android wire protocol (MVP)
 
-<!-- SPDX-License-Identifier: BUSL-1.1 (pending GC final review) -->
+<!-- SPDX-License-Identifier: BUSL-1.1 -->
 
 Phone → agent: the **phone dials out**. No port forwarding, no same-LAN
 requirement, no USB. The relay URL is shared by convention:

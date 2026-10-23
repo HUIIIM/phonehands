@@ -1,6 +1,6 @@
 # phonehands-android-helper (APK)
 
-<!-- SPDX-License-Identifier: BUSL-1.1 (pending GC final review) -->
+<!-- SPDX-License-Identifier: BUSL-1.1 -->
 
 Kotlin companion app for the Android device engine. Runs on the phone,
 dials **out** to the agent relay, executes gestures via `AccessibilityService`,

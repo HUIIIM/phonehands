@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# SPDX-License-Identifier: BUSL-1.1 (pending GC final review)
+# SPDX-License-Identifier: BUSL-1.1
 #
 # test-mock.sh — mock verification for the remote-topology chain.
 #

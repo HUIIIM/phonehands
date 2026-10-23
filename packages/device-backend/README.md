@@ -89,5 +89,4 @@ Current: 47 tests, 0 failures, 90.93% line coverage (gate: ≥ 80%).
 This package mixes two license regimes — see `NOTICE.md`:
 
 - `src/wda/*`: adapted from ios-agent, **MIT** headers retained.
-- Everything else: `SPDX-License-Identifier: BUSL-1.1 (pending GC
-  final review)` — never MIT. Final legal text to be determined by GC.
+- Everything else: `SPDX-License-Identifier: BUSL-1.1` — never MIT.

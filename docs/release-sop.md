@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: BUSL-1.1 (pending GC final review) -->
+<!-- SPDX-License-Identifier: BUSL-1.1 -->
 
 # PhoneHands Release SOP
 
@@ -24,7 +24,7 @@
 
 - [ ] CHANGELOG.md 同步写（三段式）
 - [ ] 测试全绿（覆盖率 ≥80% 门禁：TS 用 `c8 --check-coverage --lines 80`）
-- [ ] BSL header 抽查（新文件）：`SPDX-License-Identifier: BUSL-1.1 (pending GC final review)`
+- [ ] BSL header 抽查（新文件）：`SPDX-License-Identifier: BUSL-1.1`
 - [ ] THIRD_PARTY_NOTICES.md：有新增依赖就更新
 - [ ] 打 tag → GitHub Release（粘贴三段式正文）→ 发版
 - [ ] 发版后 1 小时内：Discord #releases 公告＋X 一条（如有用户可见变化）

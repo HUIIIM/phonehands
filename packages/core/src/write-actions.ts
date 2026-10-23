@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: BUSL-1.1 (pending GC final review)
+// SPDX-License-Identifier: BUSL-1.1
 // Write-action capability list. In a read-only build (PHONEHANDS_READ_ONLY=1)
 // importing this module throws immediately — write actions do not exist in
 // that build, at any layer. (Compile-time switch, hinge-mcp P3.)

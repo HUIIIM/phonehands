@@ -1,8 +1,8 @@
-<!-- SPDX-License-Identifier: BUSL-1.1 (pending GC final review) -->
+<!-- SPDX-License-Identifier: BUSL-1.1 -->
 
 # THIRD_PARTY_NOTICES — PhoneHands 第三方组件声明
 
-> PhoneHands 本体走 BSL 1.1（pending GC 最终文本）。以下上游组件保留各自 license；
+> PhoneHands 本体走 BSL 1.1（终稿见 LICENSE）。以下上游组件保留各自 license；
 > "状态：待 GC 裁决"的条目，在裁决完成前不随 public release 一起发布。
 
 ## 1. appium/WebDriverAgent

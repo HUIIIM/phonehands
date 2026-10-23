@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: BUSL-1.1 (pending GC final review)
+// SPDX-License-Identifier: BUSL-1.1
 
 /** Thrown when a non-loopback device address is configured. */
 export class DeviceSecurityError extends Error {

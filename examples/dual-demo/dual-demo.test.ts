@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: BUSL-1.1 (pending GC final review)
+// SPDX-License-Identifier: BUSL-1.1
 //
 // dual-demo tests — all mocks, no real network/device/account.
 // Run: node --test dual-demo.test.ts
