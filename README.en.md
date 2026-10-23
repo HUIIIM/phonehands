@@ -9,7 +9,7 @@
 ![CI: planned](https://img.shields.io/badge/CI-planned-lightgrey)
 ![Docs: first batch](https://img.shields.io/badge/docs-first%20batch-green)
 
-**When the API dies, the task still ships.** The other hand took over in 4 ms — 20 matches, every single one delivered.
+**When the API dies, the task still ships.** The other hand took over — 20 matches, every single one delivered.
 
 > Hinge shipped an app update and the endpoint 403'd — all 20 matches still got read.
 > One script; the Router moved from the API engine to the device engine (real taps) on its own.
