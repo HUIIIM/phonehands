@@ -28,7 +28,7 @@ graph TB
 
 - `backend`：这一下是哪只手动的——永远以它为准，不猜。
 - `degraded:true`：降级发生，调用方必须知道。
-- `evidence.uncertain=true`：写操作超时/断连，不确定执行了没——**绝不重放**（MV427），Router 或人决定下一步。
+- `evidence.uncertain=true`：写操作超时/断连，不确定执行了没——**绝不重放**（the no-auto-replay rule），Router 或人决定下一步。
 
 ## 动作表（core 定义）
 

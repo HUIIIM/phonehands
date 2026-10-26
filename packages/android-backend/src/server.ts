@@ -8,7 +8,7 @@
  *  - dedupes reconnects by device_id (new socket replaces the old one)
  *  - keeps the latest frame per device (screenshot = latest frame)
  *  - matches ack -> pending action by id, with a timeout that marks
- *    mutating actions uncertain (MV427: never auto-replay uncertain input)
+ *    mutating actions uncertain (No-auto-replay rule: never auto-replay uncertain input)
  *  - sends ping every 30s; drops sockets idle > 90s
  *
  * Secrets: hello.token is compared in constant-ish time and never logged;
@@ -139,7 +139,7 @@ export class AndroidRelayServer {
       const mutating = action === "tap" || action === "swipe" || action === "launch";
       const timer = setTimeout(() => {
         dev.pending.delete(id);
-        // Timeout: mutating actions are UNCERTAIN (MV427) — resolve null and
+        // Timeout: mutating actions are UNCERTAIN (no-auto-replay rule) — resolve null and
         // let the caller mark evidence.uncertain = true instead of failing.
         resolve(null);
       }, this.options.actionTimeoutMs);

@@ -41,7 +41,7 @@
 | 16 | 手机 USB 不识别 | 没点"信任此电脑" | 手机上点信任；Mac 确认 usbmuxd 在跑 |
 | 17 | WDA session 建不上 | WDA 没跑起来或签名掉了 | 先 `resign.sh`，再 `setup.sh` 重走 USB 转发 |
 | 18 | `observe()` 返回 degraded:true | accessibility 树不可用（自绘 UI 等） | 正常回退：走截图→调用方给归一化框→`screenshotToTapPoint` 映射 |
-| 19 | 点的位置偏了 | 截图与逻辑分辨率方向不一致 | `fallback.ts` 会 loud fail（MV427 闭环），检查 `windowSize()` 与截图方向 |
+| 19 | 点的位置偏了 | 截图与逻辑分辨率方向不一致 | `fallback.ts` 会 loud fail（no-auto-replay closed loop），检查 `windowSize()` 与截图方向 |
 | 20 | 操作超时但不确定执行没 | 网络抖动/手机锁屏 | envelope `evidence.uncertain=true`——**绝不盲重放**，Router/人决定下一步 |
 | 21 | 手机锁屏了 | 超出 MVP 范围 | 手动解锁；`DeviceLocked` wake 不在 Phase 1 |
 

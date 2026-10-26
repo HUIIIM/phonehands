@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: BUSL-1.1
 
 /**
- * Screenshot-fallback pixel mapping (MV427 closed loop).
+ * Screenshot-fallback pixel mapping (no-auto-replay rule closed loop).
  *
  * When the accessibility tree is unavailable, observe() returns a
  * screenshot with tree_unavailable=true. Pixel locating is the caller's

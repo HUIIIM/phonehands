@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: BUSL-1.1
 // Audit log with defense-in-depth secret redaction.
 //
-// Primary rule (MV421 / 立项书 §3.4): secrets NEVER enter logs —
+// Primary rule (design charter §3.4): secrets NEVER enter logs —
 // auth-handoff records only { wallType, at }. This module is the second
 // line: anything that slips through with a credential-shaped key is
 // redacted before it is written.

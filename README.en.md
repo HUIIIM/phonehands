@@ -137,7 +137,7 @@ graph LR
 - **Read-only is a compile-time switch**: write methods do not exist in read-only builds; enabling writes
   means recompiling.
 - **No replay of uncertain actions**: timed-out or disconnected writes return `evidence.uncertain=true`; the
-  Router decides the next step and never retries blindly (MV427).
+  Router decides the next step and never retries blindly (no-auto-replay rule).
 - **Loopback-only by default**: the device link rejects non-loopback addresses, asserted in tests.
 
 Details: [docs/architecture.md](./docs/architecture.md).
@@ -159,7 +159,7 @@ There is no SECURITY.md vulnerability-reporting process in the repository yet.
 
 ## Status and limitations
 
-v0.1.0, unreleased. The repository is public (released under GC-20261022-024), and every npm package
+v0.1.0, unreleased. The repository is public (released after compliance review), and every npm package
 is `private: true`. No CI runs on pull requests yet; the workflows in place are the iOS Simulator and Android
 Emulator protocol chains (manual + weekly).
 

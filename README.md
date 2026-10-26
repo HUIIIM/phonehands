@@ -128,7 +128,7 @@ graph LR
 
 - **双引擎＋自动降级**：读走 API，写走设备；降级在每个结果的 `degraded` 字段里标明。`degradeAfterFaults` 可配：演示里 1 次 4xx 就切，生产建议 3 次防抖动。
 - **只读是编译期开关**：只读构建里写方法不存在，不是运行时 flag；要开放写操作需自行重新编译。
-- **不确定不重放**：超时/断连的写操作返回 `evidence.uncertain=true`，由 Router 决定下一步，不盲目重试（MV427）。
+- **不确定不重放**：超时/断连的写操作返回 `evidence.uncertain=true`，由 Router 决定下一步，不盲目重试（the no-auto-replay rule）。
 - **loopback-only 默认**：设备链路拒绝非回环地址，有测试断言覆盖。
 
 详见 [docs/architecture.md](./docs/architecture.md)。
@@ -145,7 +145,7 @@ graph LR
 
 ## 现状与边界
 
-v0.1.0，未发布。仓库已公开（GC 放行 GC-20261022-024）；npm 包全部 `private: true`，未发布。仓库目前没有在 PR 上运行的 CI；已接入的 workflow 是 iOS Simulator 与 Android Emulator 协议链（手动＋每周）。
+v0.1.0，未发布。仓库已公开（已通过合规放行）；npm 包全部 `private: true`，未发布。仓库目前没有在 PR 上运行的 CI；已接入的 workflow 是 iOS Simulator 与 Android Emulator 协议链（手动＋每周）。
 
 **目前做不到**：API 写操作（Phase 2）；微信类自绘 UI 的精准定位；免费 Apple ID 签名 7 天有效期需续签；iOS 跨网真无线（受苹果平台限制，不承诺；当前路径是 Mac＋备用 iPhone 固定拓扑）；MCP 服务（目前没有）。
 
