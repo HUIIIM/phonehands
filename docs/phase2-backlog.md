@@ -1,6 +1,6 @@
 # phonehands Phase 2 Backlog（合并候选 T3/T4/T8/T9/T10＋遗留项）
 
-> 来源：~/workspace/research_notes/phonehands-合并候选-2026-10-09.md（董事长已过目）
+> 来源：内部研究笔记《phonehands 合并候选》（2026-10-09，董事长已过目）
 > 状态：2026-10-09 立项，不阻塞 Phase 1 MVP。GC license 裁决前，所有"待核验"项只学模式、一行代码不抄。
 
 ## P2-1 Android 设备后端（T3：shuao-pro/android-mcp，MIT 公开口径）
