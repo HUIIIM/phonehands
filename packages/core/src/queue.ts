@@ -6,7 +6,7 @@
 //   cap the caller gets QUEUE_FULL and must back off — no silent drop.
 // - Every op has its own deadline (default 30s). A deadline breach rejects
 //   with TIMEOUT_UNKNOWN: the outcome is UNKNOWN (the tap may or may not
-//   have landed). Per MV427 the queue NEVER auto-replays submit-kind
+//   have landed). Per the no-auto-replay rule the queue NEVER auto-replays submit-kind
 //   actions; callers must "check first, then act".
 // - pause()/resume()/abandon() are driven by auth-handoff: while an auth
 //   wall is up, the account's queue holds; on resume it continues, on

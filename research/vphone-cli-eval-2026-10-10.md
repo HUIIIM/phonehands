@@ -1,6 +1,6 @@
 # vphone-cli（iOS 虚拟机）技术评估 · PhoneHands 可用性
 
-> 日期：2026-10-10｜评估人：技术评估组｜D461 24h 结论
+> 日期：2026-10-10｜评估人：技术评估组｜24 小时结论
 > 铁律：只读评估，未下载运行任何越狱工具链，未注册任何账号。
 > 触发：董事长转发 X 帖 @shenxiankk（PC/Mac Apple Silicon 跑越狱版 iOS 虚拟机，bootstrap 配好，已适配 iOS 27）。
 

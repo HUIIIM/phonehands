@@ -80,7 +80,7 @@ reconnecting replaces the old socket (dedup, no double counting).
 
 Failure: `"ok": false, "error": "<short reason>"`. No retries of
 uncertain mutating actions — a gesture that times out is reported as
-failed; the agent re-observes before deciding (MV427: never replay
+failed; the agent re-observes before deciding (No-auto-replay rule: never replay
 uncertain input).
 
 ### frame (streamed, ~1 fps)

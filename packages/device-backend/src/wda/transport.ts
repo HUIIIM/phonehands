@@ -8,7 +8,7 @@
 //  - Timeout mapping DIVERGES from upstream: upstream maps read-timeouts
 //    to RunnerCrashed (recoverable -> auto-heal retries). We map them to
 //    ActionTimeout (NOT recoverable), because a timed-out mutating action
-//    is ambiguous and MV427 forbids replaying it. Same for mid-flight
+//    is ambiguous and the no-auto-replay rule forbids replaying it. Same for mid-flight
 //    socket death -> ConnectionLost (not recoverable).
 //    Only "connection refused" (runner never reached) stays RunnerCrashed.
 //  - Loopback enforcement is NOT done here; the DeviceBackend constructor
@@ -233,7 +233,7 @@ export class WdaTransport {
 /**
  * Maps node-level transport failures to the typed vocabulary.
  *
- * The MV427-critical distinction:
+ * The no-auto-replay-critical distinction:
  *  - ECONNREFUSED / connect-timeout  -> RunnerCrashed (recoverable):
  *    the runner never saw the request, so healing + one retry is safe.
  *  - request timeout / mid-flight reset -> ActionTimeout / ConnectionLost

@@ -83,7 +83,7 @@ describe("queue: backpressure (32 pending cap)", () => {
   });
 });
 
-describe("queue: deadline is unknown-state, never auto-replay (MV427)", () => {
+describe("queue: deadline is unknown-state, never auto-replay (no-auto-replay rule)", () => {
   it("a hanging op rejects with TIMEOUT_UNKNOWN", async () => {
     const q = new SerialOpQueue();
     await assert.rejects(

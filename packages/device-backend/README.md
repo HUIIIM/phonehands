@@ -43,7 +43,7 @@ Every action returns the core envelope:
    throwing. Heals and retries **only** when the action provably never
    executed. Timeouts and mid-flight disconnects are ambiguous: they
    return `ok: false` + `uncertain: true` and are **never** replayed
-   (deliberate divergence from upstream, MV427).
+   (deliberate divergence from upstream, the no-auto-replay rule).
 3. **Per-frame pixel scaling** (`src/fallback.ts`): the screenshot→tap
    mapping reads a fresh `/window/size` every frame (never a cached
    ratio) and requires the two axes to agree within 2% — otherwise it

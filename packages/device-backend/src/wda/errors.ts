@@ -7,7 +7,7 @@
 //  - Ported to TypeScript (sync node:http transport).
 //  - Added ActionTimeout as a DISTINCT error from RunnerCrashed: a request
 //    that times out is ambiguous (the device may have executed it) and must
-//    NOT be auto-healed+replayed (MV427 "never replay uncertain"). The
+//    NOT be auto-healed+replayed (no-auto-replay rule "never replay uncertain"). The
 //    upstream maps read-timeouts to RunnerCrashed (recoverable); we
 //    deliberately diverge here — see src/wda/transport.ts.
 

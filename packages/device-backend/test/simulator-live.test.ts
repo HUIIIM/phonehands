@@ -107,7 +107,7 @@ describe("device-backend vs REAL WDA on iOS Simulator (CI-only)", { skip: !LIVE 
     // Kill the session behind the client's back. The client never saw it die.
     await deleteSessionRaw(WDA_URL, sid!);
     // Next session-scoped call must detect the dead session, rebuild it,
-    // retry once, and report recovered=true. This is the MV427 path firing
+    // retry once, and report recovered=true. This is the no-auto-replay path firing
     // against a real runner — not a mock.
     const { xml, recovered } = await session.sourceXml();
     assert.equal(recovered, true, "auto-heal must have fired");
