@@ -2,7 +2,7 @@
 
 # 质量门禁自检表 — @phonehands/api-backend
 
-> 标准：`~/workspace/phonehands/docs/quality-gates.md`（董事长 2026-10-09 21:4x 质量令）。
+> 标准：`docs/quality-gates.md`（董事长 2026-10-09 21:4x 质量令）。
 > 交付日期：2026-10-09。有一门 FAIL 即打回。
 
 | 门 | 结论 | 证据 |
