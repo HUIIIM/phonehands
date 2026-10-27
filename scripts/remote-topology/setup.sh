@@ -310,12 +310,13 @@ if ! command -v headscale >/dev/null 2>&1; then
 fi
 sudo mkdir -p /etc/headscale /var/lib/headscale
 if [ ! -f /etc/headscale/config.yaml ]; then
-  NOISE_KEY="$(openssl rand -hex 32)"
+  # Schema matches the pinned release's config-example.yaml (0.23+ keys:
+  # noise.private_key_path, dns.*); the noise key is generated on first start.
   sudo tee /etc/headscale/config.yaml >/dev/null <<YAML
 server_url: ${SERVER_URL}
 listen_addr: 0.0.0.0:${SRV_PORT}
 noise:
-  private_key: ${NOISE_KEY}
+  private_key_path: /var/lib/headscale/noise_private.key
 prefixes:
   v4: 100.64.0.0/10
   v6: fd7a:115c:a1e0::/48
@@ -325,13 +326,17 @@ derp:
   urls: []
   paths: []
   auto_update_enabled: false
-dns_config:
-  override_local_dns: false
-  base_domain: phonehands.tailnet
+database:
+  type: sqlite
+  sqlite:
+    path: /var/lib/headscale/db.sqlite
+dns:
   magic_dns: true
-  domains: []
+  base_domain: phonehands.tailnet
+  override_local_dns: false
   nameservers:
-    - 1.1.1.1
+    global:
+      - 1.1.1.1
 YAML
   sudo chmod 600 /etc/headscale/config.yaml
 fi
@@ -342,6 +347,7 @@ After=network.target
 [Service]
 Type=simple
 ExecStart=/usr/local/bin/headscale serve
+RuntimeDirectory=headscale
 Restart=always
 RestartSec=5
 [Install]
@@ -376,9 +382,11 @@ headscale_join() {
     fi
     log_info "minting a one-time pre-auth key on your server (value never logged)..."
     # shellcheck disable=SC2034
+    # headscale >= 0.26: --user takes the numeric user ID; keys look like
+    # hskey-auth-<prefix>-<secret> (legacy keys are a bare alnum string).
     HEADSCALE_AUTHKEY="$(ssh -o ConnectTimeout=10 "$ssh_host" \
-      "headscale users create '${HEADSCALE_USER}' >/dev/null 2>&1 || true; headscale preauthkeys create --user '${HEADSCALE_USER}' --reusable --expiration 24h 2>/dev/null" \
-      | grep -Eo '[A-Za-z0-9]{20,}' | tail -n 1)"
+      "headscale users create '${HEADSCALE_USER}' >/dev/null 2>&1 || true; uid=\$(headscale users list --name '${HEADSCALE_USER}' -o json 2>/dev/null | grep -Eo '\"id\": *\"?[0-9]+' | grep -Eo '[0-9]+' | head -n 1); [ -n \"\$uid\" ] && headscale preauthkeys create --user \"\$uid\" --reusable --expiration 24h 2>/dev/null" \
+      | grep -Eo 'hskey-auth-[A-Za-z0-9]+-[A-Za-z0-9]+|[A-Za-z0-9]{20,}' | head -n 1)"
     [ -n "${HEADSCALE_AUTHKEY:-}" ] || die "could not mint a pre-auth key on the server."
     log_info "joining this Mac to your headscale server..."
     log_cmd "tailscale up --login-server=$url --authkey=[REDACTED] --hostname=phonehands-mac"

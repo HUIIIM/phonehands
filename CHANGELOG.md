@@ -11,6 +11,7 @@
 
 **改了什么**
 - 独立评估修复（2026-10-26）：core 队列 deadline 与认证超时计时器不再 `unref`，超时承诺在短进程里也会兑现（core 测试 44/44，原先 8 个被取消）；新增 push/PR CI；Android relay 绑非 loopback 地址时必须配 token，加 hello 超时与消息大小上限；SSH 反向隧道默认只绑服务器 `127.0.0.1`；headscale 固定版本并校验 sha256；Android helper 明文 `ws://` 只放行 loopback 与 tailnet 域名；日志脱敏补上 Cookie / Basic / JWT / 手机号；zod 升到 4.6.7；workflow 全部按 SHA 固定并声明最小权限。
+- 独立评估收尾（2026-10-27）：只读构建同时去掉 `launch_app` / `press_home`（所有写级动作都不存在）；observe 不再上传密码框内容；已存在的 `~/.phonehands` 收紧到 0700；构建标志文件不再写时间戳（构建不再弄脏工作区）；headscale 配置模板和入网命令对齐 v0.29（`dns:`、`noise.private_key_path`、按用户 ID 发 key、`hskey-auth-` 新格式）；Android helper 构建脚本改为 `.gradle.kts`（原文件是 Kotlin DSL 语法），CI 新增 APK 编译；新增 SECURITY.md、CODEOWNERS。
 - 双引擎骨架立起来了：`@phonehands/core` 统一 Action 接口＋Router＋结果 envelope＋串行队列（读/写/降级演示三例可跑）。
 - API 引擎（快的那只手）：Hinge 读 adapter 上线——点赞、匹配、聊天消息毫秒级结构化 JSON；只读是编译期锁死的，写方法在构建里根本不存在。
 - 设备引擎（真的那只手）：WDA 纯 HTTP 客户端——点按、滑动、输入、截图、读 accessibility 树；树读不出来自动截图回退；不确定绝不重放。

@@ -16,10 +16,11 @@ describe("read-only build: write actions do not exist (compile-time, not runtime
 
   it("write actions are absent from the registry", () => {
     const registry = new ActionRegistry();
-    for (const action of ["tap", "tap_text", "swipe", "type_text"]) {
+    // Every write-tier action (anything that changes device state) is absent.
+    for (const action of ["tap", "tap_text", "swipe", "type_text", "launch_app", "press_home"]) {
       assert.equal(registry.hasAction(action), false, action);
     }
-    for (const action of ["observe", "read", "screenshot", "launch_app", "press_home"]) {
+    for (const action of ["observe", "read", "screenshot"]) {
       assert.equal(registry.hasAction(action), true, action);
     }
   });

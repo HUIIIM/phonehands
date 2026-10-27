@@ -11,8 +11,13 @@ describe("actions: frozen contract", () => {
     );
   });
 
-  it("write-action gate list is exactly tap/tap_text/swipe/type_text", () => {
-    assert.deepEqual([...WRITE_ACTION_NAMES].sort(), ["swipe", "tap", "tap_text", "type_text"]);
+  it("write-action gate list is exactly the write-tier actions", () => {
+    const writeTier = ALL_ACTION_NAMES.filter((a) => ACTION_PRIVILEGE[a] === "write");
+    assert.deepEqual([...WRITE_ACTION_NAMES].sort(), [...writeTier].sort());
+    assert.deepEqual(
+      [...WRITE_ACTION_NAMES].sort(),
+      ["launch_app", "press_home", "swipe", "tap", "tap_text", "type_text"]
+    );
   });
 
   it("privilege tiers: reads are read-tier, everything else write-tier", () => {

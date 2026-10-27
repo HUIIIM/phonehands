@@ -75,8 +75,9 @@ reconnecting replaces the old socket (dedup, no double counting).
 - `tap` / `swipe` / `launch` → `null`
 - `screenshot` → `{ "jpeg_b64": "...", "width": 360, "height": 780, "frame_age_ms": 123 }`
 - `observe` → `{ "nodes": [ { "class": "android.widget.Button", "text": "OK",
-  "content_desc": "", "bounds": [l,t,r,b], "clickable": true }, ... ],
-  "truncated": false }` (capped at 500 nodes)
+  "password": false, "content_desc": "", "bounds": [l,t,r,b], "clickable": true }, ... ],
+  "truncated": false }` (capped at 500 nodes; `text` is always `""` for password
+  fields, which are flagged `"password": true`)
 
 Failure: `"ok": false, "error": "<short reason>"`. No retries of
 uncertain mutating actions — a gesture that times out is reported as

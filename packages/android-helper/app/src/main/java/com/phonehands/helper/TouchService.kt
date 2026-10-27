@@ -91,9 +91,12 @@ class TouchService : AccessibilityService() {
         private fun nodeToJson(node: AccessibilityNodeInfo): JSONObject {
             val bounds = Rect()
             node.getBoundsInScreen(bounds)
+            // Never ship the contents of password fields off the phone.
+            val text = if (node.isPassword) "" else node.text?.toString() ?: ""
             return JSONObject()
                 .put("class", node.className?.toString() ?: "")
-                .put("text", node.text?.toString() ?: "")
+                .put("text", text)
+                .put("password", node.isPassword)
                 .put("content_desc", node.contentDescription?.toString() ?: "")
                 .put("bounds", JSONArray(listOf(bounds.left, bounds.top, bounds.right, bounds.bottom)))
                 .put("clickable", node.isClickable)

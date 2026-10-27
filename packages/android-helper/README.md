@@ -13,7 +13,7 @@ this machine has no Android SDK; compilation moves to CI in Phase 2.
 
 ```bash
 cd packages/android-helper
-./gradlew :app:assembleDebug   # needs ANDROID_HOME / Android SDK
+gradle :app:assembleDebug   # Gradle 8.7+, JDK 17, ANDROID_HOME / Android SDK 34 (CI: ci.yml android-helper)
 ```
 
 ## What's inside

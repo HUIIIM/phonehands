@@ -12,7 +12,7 @@
 | 接口 | TypeScript 库（`@phonehands/core` 统一 Action 接口）· 命令行脚本（环境体检、远程拓扑） |
 | 许可证 | BUSL-1.1（[LICENSE](LICENSE)），许可方 VERTCITY LLC |
 | 语言 | 简体中文 · [English](./README.en.md) |
-| 联系 | 安全：暂无 SECURITY.md · 产品：[vertciti.com](https://vertciti.com) |
+| 联系 | 安全：[SECURITY.md](SECURITY.md)（私密报告） · 产品：[vertciti.com](https://vertciti.com) |
 
 演示录屏（8 秒 GIF，真实代码链路、本地服务录制）和产品图在 [docs/assets](./docs/assets)；这里只给链接、不内嵌图片。
 
@@ -135,13 +135,13 @@ graph LR
 
 ## 安全与合规
 
-- **只操作你自己的账号。** API 引擎使用逆向 HTTP 客户端，属于平台服务条款的灰色地带；默认只读，写操作默认构建里不存在。
+- **只操作你自己的账号。** API 引擎使用逆向 HTTP 客户端，属于平台服务条款的灰色地带；API 引擎本身没有写方法；只读构建（`PHONEHANDS_READ_ONLY=1`）里所有会改变设备状态的动作都不存在。
 - **审计与断连。** 全程审计日志，一键断连。
 - **凭据不经手、不落地。** 框架不经手密码和验证码（暂停 → 你在自己手机上完成 → 继续）；session 文件 0600、原子写、zod 校验＋严格权限门；OTP 只走无回显 TTY；日志全链路脱敏。
 - **零埋点。** 自托管运行，不回传任何数据（[ANALYTICS.md](./ANALYTICS.md)）。远程拓扑默认用自托管 headscale；healthcheck 的中继路径验证会把第三方云中继域名判为 FAIL。
 - **无需越狱 / root。** iOS 走 WDA（自己的 Apple ID 签名）；Android 走 helper APK（需无障碍/录屏权限，清单见 `packages/android-helper/PROTOCOL.md`）。
 
-仓库暂无 SECURITY.md 漏洞报告流程。
+漏洞请按 [SECURITY.md](SECURITY.md) 私下报告。
 
 ## 现状与边界
 

@@ -61,7 +61,14 @@ export const ALL_ACTION_NAMES: readonly ActionName[] = [
  * When built with PHONEHANDS_READ_ONLY=1 these are NOT registered —
  * not registered-and-blocked, but absent from the code (hinge-mcp P3).
  */
-export const WRITE_ACTION_NAMES: readonly ActionName[] = ["tap", "tap_text", "swipe", "type_text"];
+export const WRITE_ACTION_NAMES: readonly ActionName[] = [
+  "tap",
+  "tap_text",
+  "swipe",
+  "type_text",
+  "launch_app",
+  "press_home",
+];
 
 /** Privilege tier per action. The Router NEVER moves a request to a
  *  higher-privilege backend silently (T5 no-silent-escalation rule). */
