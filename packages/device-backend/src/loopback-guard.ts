@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: BUSL-1.1
 
 /**
- * Loopback-only guard (MV428 posture, mirroring iPhone Use).
+ * Loopback-only guard (loopback-only posture, mirroring iPhone Use).
  *
  * The device link must never be reachable from the network: forwarded
  * addresses are restricted to the loopback interface. Anything else —

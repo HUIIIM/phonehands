@@ -31,6 +31,6 @@
 | Discussions 5 分类 | PENDING | 仓库 public 后开 |
 | CHANGELOG v0.1.0 | PASS | 三段式条目已写，标注"未发布" |
 | THIRD_PARTY_NOTICES | PASS | 6 条上游已登记，待 GC 逐条裁决 |
-| BSL 第一屏＋LICENSE | PASS | README 第一屏已声明；LICENSE 终稿已落仓（GC-20261022-024） |
+| BSL 第一屏＋LICENSE | PASS | README 第一屏已声明；LICENSE 终稿已落仓（合规放行） |
 | Show HN 首评 | PENDING | 待内容管线 |
 | GC＋CEO 双终审 | PENDING | 发布前置 |

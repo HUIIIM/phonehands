@@ -136,7 +136,7 @@ export class AndroidDevice {
     const ack = await this.server.sendAction(this.deviceId, action, params);
     const latency = Date.now() - started;
     if (!ack) {
-      // MV427: never auto-replay. Mark uncertain for mutating actions.
+      // No-auto-replay rule: never auto-replay. Mark uncertain for mutating actions.
       return {
         ok: false,
         backend: "device",

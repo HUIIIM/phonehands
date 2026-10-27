@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: BUSL-1.1
-// Auth handoff protocol (hinge-mcp P2 spirit, phonehands MV424).
+// Auth handoff protocol (hinge-mcp P2 spirit, the phonehands queued pause/resume design).
 //
 // When a backend hits an auth wall (password / Face ID / SMS code screen)
 // it returns an envelope with error.code === "AUTH_REQUIRED". The Router

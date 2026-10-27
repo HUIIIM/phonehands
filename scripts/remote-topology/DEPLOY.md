@@ -42,7 +42,7 @@
 ### 第 0 步：打开终端，进到脚本目录
 
 ```bash
-cd ~/workspace/phonehands/scripts/remote-topology
+cd scripts/remote-topology  # from the repository root
 ```
 
 **预期看到什么**：`ls` 能看到 `setup.sh`、`healthcheck.sh`、`resign.sh`、`DEPLOY.md` 这些文件。

@@ -5,7 +5,7 @@
 //
 // phonehands modifications:
 //  - Ported to TypeScript.
-//  - Auto-heal scope NARROWED (deliberate divergence, MV427):
+//  - Auto-heal scope NARROWED (deliberate divergence, the no-auto-replay rule):
 //    upstream retries on read-timeouts too. We heal+retry ONLY when the
 //    action provably never executed:
 //      * SessionLost ("invalid session id") — the session is dead, the

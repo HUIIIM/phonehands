@@ -1,6 +1,6 @@
 # phonehands Phase 2 Backlog（合并候选 T3/T4/T8/T9/T10＋遗留项）
 
-> 来源：~/workspace/research_notes/phonehands-合并候选-2026-10-09.md（董事长已过目）
+> 来源：内部研究笔记《phonehands 合并候选》（2026-10-09，董事长已过目）
 > 状态：2026-10-09 立项，不阻塞 Phase 1 MVP。GC license 裁决前，所有"待核验"项只学模式、一行代码不抄。
 
 ## P2-1 Android 设备后端（T3：shuao-pro/android-mcp，MIT 公开口径）
@@ -19,7 +19,7 @@
 - emergency stop：撕掉 agent run＋tool 进程＋PTY＋ADB 流；Red 安全模式（显式进入、30 分钟上限、自动回退）。core 已预留 `emergencyStop()` 接口桩。
 
 ## P2-5 认证交接实现参考（T8：mhmdibrahimm/human-intervention-mcp，license 待核验→模式）
-- MV424 pause/resume 的排队版实现（它家无队列，我们自己实现排队＋可恢复）。
+- 排队版 pause/resume 的实现（它家无队列，我们自己实现排队＋可恢复）。
 
 ## P2-6 视觉定位引擎（T9：microsoft/OmniParser，MIT 公开口径待核验）
 - Phase 2：device-backend fallback 链做**接口抽象**（LocatorProvider），不硬绑模型。

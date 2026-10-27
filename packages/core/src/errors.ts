@@ -66,7 +66,7 @@ export class QueueFullError extends PhoneHandsError {
 }
 
 /**
- * Operation exceeded its deadline. The outcome is UNKNOWN (MV427):
+ * Operation exceeded its deadline. The outcome is UNKNOWN (no-auto-replay rule):
  * the action may or may not have executed on the device. Callers must
  * "check first, then act" — never auto-replay submit-kind actions.
  */

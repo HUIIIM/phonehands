@@ -33,7 +33,7 @@ license status **pending GC final ruling**).
 1. Timeouts map to `ActionTimeout` (not recoverable), mid-flight socket
    death to `ConnectionLost` (not recoverable). Upstream maps read
    timeouts to RunnerCrashed (recoverable → auto-heal retries). We do
-   not: a timed-out mutating action is ambiguous and MV427 forbids
+   not: a timed-out mutating action is ambiguous and the no-auto-replay rule forbids
    replaying it.
 2. Auto-heal replays only `SessionLost` and connection-refused
    `RunnerCrashed`, where the action provably never executed.

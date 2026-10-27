@@ -2,7 +2,7 @@
 
 > 董事长 X 帖（@interlap01，2026-10-10）："I don't need a spare Mac mini to build iOS apps from my phone anymore. Cursor and Claude cloud agents can build, test, and ship entire iOS apps from Linux sandboxes already included in my subscriptions."
 > 仓库：github.com/MobAI-App/mobai-dev — "Everything a coding agent needs to build iOS apps from a Linux sandbox"
-> 评估：只读＋最小实测（binary 下载运行），未注册任何账号、未花钱。D461 24h 内。
+> 评估：只读＋最小实测（binary 下载运行），未注册任何账号、未花钱。24 小时内出结论。
 > 结论前置：**部分证伪。Mac 没有消失，只是变成了别人的 Mac，按分钟计费。**
 
 ---

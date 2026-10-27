@@ -14,7 +14,7 @@
  *   DeviceAdapter          protocol the Router programs against
  *   WdaSession             session lifecycle + auto-heal (MIT, adapted)
  *   WdaTransport           low-level WDA HTTP client (MIT, adapted)
- *   screenshotToTapPoint   screenshot-fallback pixel mapping (MV427 loop)
+ *   screenshotToTapPoint   screenshot-fallback pixel mapping (no-auto-replay loop)
  *   DEVICE_CAPABILITIES / canHandle / capabilityFor  Router lookup table
  *   assertLoopbackHost / assertLoopbackUrl           loopback-only guard
  *   audit helpers          redacted audit ring (no sensitive fields)
