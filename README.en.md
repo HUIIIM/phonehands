@@ -14,7 +14,7 @@ engine and marks the result as degraded.
 | Interfaces | TypeScript library (`@phonehands/core` unified Action interface) · command-line scripts (environment doctor, remote topology) |
 | Licence | BUSL-1.1 ([LICENSE](LICENSE)), licensor VERTCITY LLC |
 | Languages | [简体中文](./README.md) · English |
-| Contact | Security: no SECURITY.md yet · Product: [vertciti.com](https://vertciti.com) |
+| Contact | Security: [SECURITY.md](SECURITY.md) (private reporting) · Product: [vertciti.com](https://vertciti.com) |
 
 The demo recording (8-second GIF, recorded from the real code path against local services) and product
 images are in [docs/assets](./docs/assets); they are linked rather than embedded.
@@ -145,7 +145,8 @@ Details: [docs/architecture.md](./docs/architecture.md).
 ## Security and compliance
 
 - **Your own accounts only.** The API engine uses a reverse-engineered HTTP client, which sits in a grey area
-  of platform terms of service; it is read-only by default and write methods are absent from the default build.
+  of platform terms of service; the API engine has no write methods at all, and a read-only build
+  (`PHONEHANDS_READ_ONLY=1`) drops every action that changes device state.
 - **Audit and disconnect.** Full audit log and one-key disconnect.
 - **Credentials are never handled or stored by the framework.** It never touches passwords or OTPs (pause →
   you complete on your phone → resume); session files are 0600, atomically written and zod-validated behind
@@ -155,13 +156,14 @@ Details: [docs/architecture.md](./docs/architecture.md).
 - **No jailbreak or root.** iOS uses WDA (signed with your own Apple ID); Android uses the helper APK
   (accessibility / screen-record permissions, listed in `packages/android-helper/PROTOCOL.md`).
 
-There is no SECURITY.md vulnerability-reporting process in the repository yet.
+Report vulnerabilities privately as described in [SECURITY.md](SECURITY.md).
 
 ## Status and limitations
 
 v0.1.0, unreleased. The repository is public (released after compliance review), and every npm package
-is `private: true`. No CI runs on pull requests yet; the workflows in place are the iOS Simulator and Android
-Emulator protocol chains (manual + weekly).
+is `private: true`. Every push to `main` and every pull request runs `.github/workflows/ci.yml` (lockfile install, tsc
+build, all mock test suites, read-only build tests, `npm audit` high+); the iOS Simulator and Android
+Emulator protocol chains run manually + weekly.
 
 **Not supported today**: API writes (Phase 2); precise targeting on self-drawn UIs such as WeChat; free Apple ID
 signing expires every 7 days and needs re-signing; true cross-network wireless on iOS (an Apple platform

@@ -36,10 +36,17 @@
 #   PHONEHANDS_SSH_TUNNEL_HOST   user@relay.example.com — used for the SSH leg
 #                               AND as the headscale server host (for install)
 #   PHONEHANDS_SSH_TUNNEL_PORT   remote port for ssh reverse tunnel (default 18100)
+#   PHONEHANDS_SSH_TUNNEL_BIND   remote bind address for the reverse tunnel
+#                               (default 127.0.0.1; WDA has NO auth — 0.0.0.0
+#                               exposes full phone control to anyone who can
+#                               reach the port. Put an authenticating proxy in
+#                               front instead.)
 #   PHONEHANDS_HEADSCALE_URL     e.g. http://relay.example.com:8080
 #                               (derived from SSH host if unset)
 #   PHONEHANDS_HEADSCALE_USER    headscale user name (default: phonehands)
 #   PHONEHANDS_HEADSCALE_INSTALL=1  auto-install headscale server (else prompt)
+#   PHONEHANDS_HEADSCALE_VERSION    override the pinned headscale release (e.g. v0.29.6);
+#   PHONEHANDS_HEADSCALE_SHA256     ... then the sha256 of its linux binary is REQUIRED
 #   PHONEHANDS_ENDPOINT_FILE     where to write endpoint.json
 #   PHONEHANDS_WDA_DIR           where the WebDriverAgent source lives
 #
@@ -262,7 +269,7 @@ headscale_install_server() {
   case "$server_url" in http://*:*|https://*:*) srv_port="${server_url##*:}"; srv_port="${srv_port%%/*}";; *) srv_port="8080";; esac
 
   echo "  About to install on YOUR server $(redact "$ssh_host") (system change — needs your OK):"
-  echo "    - download headscale binary -> /usr/local/bin/headscale"
+  echo "    - download headscale binary (pinned version, sha256-verified) -> /usr/local/bin/headscale"
   echo "    - write /etc/headscale/config.yaml (minimal: MagicDNS on, no third-party DERP)"
   echo "    - enable + start systemd service 'headscale'"
   if [ "$YES" = "0" ] && [ "$HEADSCALE_INSTALL" = "0" ]; then
@@ -272,28 +279,44 @@ headscale_install_server() {
   log_info "installing headscale ..."
   ssh "$ssh_host" "sudo -n true" 2>/dev/null \
     || die "need passwordless sudo on the server for the install (or install headscale manually per DEPLOY.md)."
-  ssh "$ssh_host" bash -s "$server_url" "$srv_port" <<'REMOTE_EOF'
+  # Pinned release + sha256 (from upstream checksums.txt). The binary runs as a
+  # root systemd service, so it is never installed unverified.
+  local hs_ver="${PHONEHANDS_HEADSCALE_VERSION:-v0.29.6}" hs_sha=""
+  if [ -n "${PHONEHANDS_HEADSCALE_VERSION:-}" ]; then
+    hs_sha="${PHONEHANDS_HEADSCALE_SHA256:-}"
+    [ -n "$hs_sha" ] || die "PHONEHANDS_HEADSCALE_VERSION override needs PHONEHANDS_HEADSCALE_SHA256 (from the release's checksums.txt)."
+  fi
+  ssh "$ssh_host" bash -s "$server_url" "$srv_port" "$hs_ver" "$hs_sha" <<'REMOTE_EOF'
 set -euo pipefail
-SERVER_URL="$1"; SRV_PORT="$2"
+SERVER_URL="$1"; SRV_PORT="$2"; VER="$3"; SHA="$4"
 [ "$(uname -s)" = "Linux" ] || { echo "headscale server install supports Linux only"; exit 1; }
 case "$(uname -m)" in x86_64) ARCH=amd64;; aarch64|arm64) ARCH=arm64;; *) echo "unsupported arch"; exit 1;; esac
+if [ -z "$SHA" ]; then
+  case "$VER/$ARCH" in
+    v0.29.6/amd64) SHA=7477c374949eea6fb7cf3cbff14dbef49e4d118d9a33557d6764a77ece617e53 ;;
+    v0.29.6/arm64) SHA=7b3c792ebe10e1a81a0c8d9674aee8eb540e7dbb7ccb80a98b71024da4c72a48 ;;
+    *) echo "no pinned sha256 for headscale $VER/$ARCH"; exit 1 ;;
+  esac
+fi
 if ! command -v headscale >/dev/null 2>&1; then
-  VER="$(curl -sS https://api.github.com/repos/juanfont/headscale/releases/latest | grep -m1 '"tag_name"' | cut -d'"' -f4)"
-  [ -n "$VER" ] || { echo "could not resolve headscale version"; exit 1; }
   echo "downloading headscale $VER ($ARCH)..."
-  curl -sSL "https://github.com/juanfont/headscale/releases/download/${VER}/headscale_${VER#v}_linux_${ARCH}" \
-    -o /tmp/headscale.bin
-  sudo install -m 0755 /tmp/headscale.bin /usr/local/bin/headscale
-  rm -f /tmp/headscale.bin
+  TMP_BIN="$(mktemp)"
+  trap 'rm -f "$TMP_BIN"' EXIT
+  curl -fsSL "https://github.com/juanfont/headscale/releases/download/${VER}/headscale_${VER#v}_linux_${ARCH}" \
+    -o "$TMP_BIN"
+  echo "${SHA}  ${TMP_BIN}" | sha256sum -c --quiet - \
+    || { echo "headscale checksum mismatch — refusing to install"; exit 1; }
+  sudo install -m 0755 "$TMP_BIN" /usr/local/bin/headscale
 fi
 sudo mkdir -p /etc/headscale /var/lib/headscale
 if [ ! -f /etc/headscale/config.yaml ]; then
-  NOISE_KEY="$(openssl rand -hex 32)"
+  # Schema matches the pinned release's config-example.yaml (0.23+ keys:
+  # noise.private_key_path, dns.*); the noise key is generated on first start.
   sudo tee /etc/headscale/config.yaml >/dev/null <<YAML
 server_url: ${SERVER_URL}
 listen_addr: 0.0.0.0:${SRV_PORT}
 noise:
-  private_key: ${NOISE_KEY}
+  private_key_path: /var/lib/headscale/noise_private.key
 prefixes:
   v4: 100.64.0.0/10
   v6: fd7a:115c:a1e0::/48
@@ -303,13 +326,17 @@ derp:
   urls: []
   paths: []
   auto_update_enabled: false
-dns_config:
-  override_local_dns: false
-  base_domain: phonehands.tailnet
+database:
+  type: sqlite
+  sqlite:
+    path: /var/lib/headscale/db.sqlite
+dns:
   magic_dns: true
-  domains: []
+  base_domain: phonehands.tailnet
+  override_local_dns: false
   nameservers:
-    - 1.1.1.1
+    global:
+      - 1.1.1.1
 YAML
   sudo chmod 600 /etc/headscale/config.yaml
 fi
@@ -320,6 +347,7 @@ After=network.target
 [Service]
 Type=simple
 ExecStart=/usr/local/bin/headscale serve
+RuntimeDirectory=headscale
 Restart=always
 RestartSec=5
 [Install]
@@ -354,9 +382,11 @@ headscale_join() {
     fi
     log_info "minting a one-time pre-auth key on your server (value never logged)..."
     # shellcheck disable=SC2034
+    # headscale >= 0.26: --user takes the numeric user ID; keys look like
+    # hskey-auth-<prefix>-<secret> (legacy keys are a bare alnum string).
     HEADSCALE_AUTHKEY="$(ssh -o ConnectTimeout=10 "$ssh_host" \
-      "headscale users create '${HEADSCALE_USER}' >/dev/null 2>&1 || true; headscale preauthkeys create --user '${HEADSCALE_USER}' --reusable --expiration 24h 2>/dev/null" \
-      | grep -Eo '[A-Za-z0-9]{20,}' | tail -n 1)"
+      "headscale users create '${HEADSCALE_USER}' >/dev/null 2>&1 || true; uid=\$(headscale users list --name '${HEADSCALE_USER}' -o json 2>/dev/null | grep -Eo '\"id\": *\"?[0-9]+' | grep -Eo '[0-9]+' | head -n 1); [ -n \"\$uid\" ] && headscale preauthkeys create --user \"\$uid\" --reusable --expiration 24h 2>/dev/null" \
+      | grep -Eo 'hskey-auth-[A-Za-z0-9]+-[A-Za-z0-9]+|[A-Za-z0-9]{20,}' | head -n 1)"
     [ -n "${HEADSCALE_AUTHKEY:-}" ] || die "could not mint a pre-auth key on the server."
     log_info "joining this Mac to your headscale server..."
     log_cmd "tailscale up --login-server=$url --authkey=[REDACTED] --hostname=phonehands-mac"
@@ -450,17 +480,23 @@ case "$TUNNEL_MODE" in
     SSH_HOST="${PHONEHANDS_SSH_TUNNEL_HOST:-}"
     [ -n "$SSH_HOST" ] || die "SSH tunnel needs PHONEHANDS_SSH_TUNNEL_HOST (e.g. export PHONEHANDS_SSH_TUNNEL_HOST=user@relay.example.com). Key-based auth only."
     SSH_PORT="${PHONEHANDS_SSH_TUNNEL_PORT:-18100}"
+    SSH_BIND="${PHONEHANDS_SSH_TUNNEL_BIND:-127.0.0.1}"
     log_info "self-hosted relay leg 2: SSH reverse tunnel"
-    log_info "  $(redact "$SSH_HOST"):$SSH_PORT -> 127.0.0.1:$WDA_PORT (key-based auth only)"
+    log_info "  $(redact "$SSH_HOST"):$SSH_BIND:$SSH_PORT -> 127.0.0.1:$WDA_PORT (key-based auth only)"
+    if [ "$SSH_BIND" != "127.0.0.1" ] && [ "$SSH_BIND" != "localhost" ]; then
+      log_warn "SSH tunnel bind $SSH_BIND is NOT loopback: WDA has no auth — anyone who can reach"
+      log_warn "  $SSH_PORT on the server can control the phone. Prefer 127.0.0.1 + an authenticating proxy."
+    fi
     # supervised tunnel: auto-reconnect ~5s after drop (loot 2026-10-10: 404jsh pattern —
     # one-shot `ssh -fN` never comes back on its own; dead peer detected via ServerAlive)
-    start_bg "ssh-tunnel" env SSH_PORT="$SSH_PORT" WDA_PORT="$WDA_PORT" SSH_HOST="$SSH_HOST" \
-      bash -c 'while true; do ssh -N -o ExitOnForwardFailure=yes -o ServerAliveInterval=15 -o ServerAliveCountMax=2 -o ConnectTimeout=10 -R "0.0.0.0:$SSH_PORT:127.0.0.1:$WDA_PORT" "$SSH_HOST"; sleep 5; done'
+    start_bg "ssh-tunnel" env SSH_PORT="$SSH_PORT" SSH_BIND="$SSH_BIND" WDA_PORT="$WDA_PORT" SSH_HOST="$SSH_HOST" \
+      bash -c 'while true; do ssh -N -o ExitOnForwardFailure=yes -o ServerAliveInterval=15 -o ServerAliveCountMax=2 -o ConnectTimeout=10 -R "$SSH_BIND:$SSH_PORT:127.0.0.1:$WDA_PORT" "$SSH_HOST"; sleep 5; done'
     SSH_HOST_USED="$SSH_HOST"
     TUNNEL_ENDPOINT="${SSH_HOST##*@}:$SSH_PORT"
     TUNNEL_REACHABLE_LOCAL=0
     log_ok "ssh reverse tunnel open: endpoint $TUNNEL_ENDPOINT"
     log_warn "tunnel endpoint is NOT reachable from this Mac — verify from the remote side."
+    [ "$SSH_BIND" = "127.0.0.1" ] && log_info "  bound to the server's loopback: reach it on the server itself, or via your authenticating proxy."
     ;;
   tailscale-official)
     log_warn "official Tailscale is the OPT-IN fallback (needs a third-party account)."

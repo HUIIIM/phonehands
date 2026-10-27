@@ -2,7 +2,7 @@
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { mkdtempSync, statSync, readdirSync } from "node:fs";
+import { chmodSync, mkdtempSync, statSync, readdirSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { writeFileSync } from "node:fs";
@@ -85,4 +85,12 @@ test("overly broad permissions refuse to load (T2 strict gate, stricter than 060
 test("app slug is restricted so the session path cannot escape baseDir", () => {
   assert.throws(() => new SessionStore("../evil", tmpdir()), /invalid app slug/i);
   assert.throws(() => new SessionStore("a/b", tmpdir()), /invalid app slug/i);
+});
+
+test("a pre-existing group/world-readable base dir is tightened to 0700 on save", () => {
+  const dir = mkdtempSync(join(tmpdir(), "phonehands-session-test-"));
+  chmodSync(dir, 0o755);
+  const store = new SessionStore("hinge", dir);
+  store.save(sample());
+  assert.equal(statSync(dir).mode & 0o777, 0o700);
 });

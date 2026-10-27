@@ -27,9 +27,19 @@ name: "gate-4a · Android Emulator — protocol chain + adb smoke"
 
 on:
   workflow_dispatch: {}
+  # Verify edits to this workflow (or the code it drives) before they merge.
+  pull_request:
+    paths:
+      - .github/workflows/android-emulator.yml
+      - packages/android-backend/**
+      - examples/android-wireless-demo/**
+      - scripts/ci/**
   schedule:
     # Weekly, Monday 09:00 UTC (05:00 ET) — cheap, off-peak.
     - cron: "0 9 * * 1"
+
+permissions:
+  contents: read
 
 jobs:
   android-emulator:
@@ -38,10 +48,9 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
-
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
       - name: Set up Node.js 24
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: 24
           cache: npm
@@ -66,7 +75,7 @@ jobs:
           sudo udevadm trigger --name-match=kvm
 
       - name: Boot emulator + run protocol chain + real adb smoke
-        uses: reactivecircus/android-emulator-runner@v2
+        uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d # v2.38.0
         with:
           # API 30 + default target: boots in ~1-2 min on hosted runners.
           # (API 34 google_apis never finished booting within the action's
@@ -78,17 +87,6 @@ jobs:
           target: default
           arch: x86_64
           profile: pixel_7
-          emulator-options: -no-snapshot -no-audio -no-boot-anim -camera-back none
-          script: |
-            set -euo pipefail
-            adb wait-for-device
-            SERIAL="$(adb get-serialno)"
-            echo "Emulator serial: ${SERIAL}"
-            echo "--- 1/3 android-backend suite (real TCP/WS, mock phone) ---"
-            npm test --workspace=@phonehands/android-backend
-            echo "--- 2/3 wireless-demo assertions ---"
-            PHONEHANDS_RELAY_URL="ws://127.0.0.1:8099/phonehands-android" \
-              node examples/android-wireless-demo/demo.ts
-            echo "--- 3/3 real adb smoke (real Android OS, our cmd builders) ---"
-            ANDROID_SERIAL="${SERIAL}" node examples/android-wireless-demo/emulator-smoke.ts
+          emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -no-audio -no-boot-anim -camera-back none
+          script: bash scripts/ci/android-emulator-smoke.sh
 # retrigger 2026-10-10T02:59:58Z

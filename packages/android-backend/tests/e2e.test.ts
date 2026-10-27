@@ -220,3 +220,40 @@ test("healthcheck: unified schema against live server and dead port", async () =
   assert.equal(dead.latency_ms, -1);
   assert.equal(dead.path, "direct");
 });
+
+test("auth: non-loopback bindHost without a token is refused (fail closed)", () => {
+  assert.throws(() => new AndroidRelayServer({ port: 0, bindHost: "0.0.0.0" }), /without an authToken/);
+  assert.doesNotThrow(() => new AndroidRelayServer({ port: 0, bindHost: "0.0.0.0", authToken: "t" }));
+  assert.doesNotThrow(() => new AndroidRelayServer({ port: 0, bindHost: "::1" }));
+});
+
+test("hello gate: a socket that never sends hello is closed after helloTimeoutMs", async () => {
+  const server = new AndroidRelayServer({ port: 0, helloTimeoutMs: 100 });
+  await server.start();
+  const ws = new WebSocket(relayUrl(server.boundPort!));
+  try {
+    await new Promise<void>((r) => ws.once("open", () => r()));
+    ws.send("garbage before hello");
+    const code = await new Promise<number>((r) => ws.once("close", (c) => r(c)));
+    assert.equal(code, 4408);
+    assert.equal(server.listDevices().length, 0);
+  } finally {
+    ws.terminate();
+    await server.stop();
+  }
+});
+
+test("maxPayload: an oversized message closes the socket", async () => {
+  const server = new AndroidRelayServer({ port: 0, maxPayloadBytes: 1024 });
+  await server.start();
+  const ws = new WebSocket(relayUrl(server.boundPort!));
+  try {
+    await new Promise<void>((r) => ws.once("open", () => r()));
+    ws.send("x".repeat(4096));
+    const code = await new Promise<number>((r) => ws.once("close", (c) => r(c)));
+    assert.equal(code, 1009);
+  } finally {
+    ws.terminate();
+    await server.stop();
+  }
+});

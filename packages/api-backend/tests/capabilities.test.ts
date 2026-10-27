@@ -56,3 +56,22 @@ test("sanitizeLogLine(): bearer tokens and quoted secrets are masked", () => {
   assert.ok(!line.includes("abc.def.ghi"));
   assert.ok(line.includes("[REDACTED]"));
 });
+
+test("redact(): cookies, JWTs and phone numbers are stripped too", () => {
+  const out = redact({
+    cookie: "sid=abc",
+    jwt: "eyJhbGciOi.x.y",
+    phoneNumber: "+15551234567",
+    note: "Authorization: Basic dXNlcjpwYXNz",
+  }) as Record<string, unknown>;
+  assert.equal(out["cookie"], "[REDACTED]");
+  assert.equal(out["jwt"], "[REDACTED]");
+  assert.equal(out["phoneNumber"], "[REDACTED]");
+  assert.ok(!String(out["note"]).includes("dXNlcjpwYXNz"));
+});
+
+test("sanitizeLogLine(): Basic auth and Cookie headers are masked", () => {
+  const line = sanitizeLogLine("GET /x Authorization: Basic dXNlcjpwYXNz\nCookie: sid=abc; other=1");
+  assert.ok(!line.includes("dXNlcjpwYXNz"));
+  assert.ok(!line.includes("sid=abc"));
+});

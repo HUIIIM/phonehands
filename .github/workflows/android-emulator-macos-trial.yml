@@ -14,6 +14,9 @@ name: "trial · Android Emulator on macOS (gate-4a validation)"
 on:
   workflow_dispatch: {}
 
+permissions:
+  contents: read
+
 jobs:
   android-emulator-macos:
     runs-on: macos-14
@@ -21,10 +24,9 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
-
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
       - name: Set up Node.js 24
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: 24
           cache: npm
@@ -33,22 +35,11 @@ jobs:
         run: npm ci --workspaces --include-workspace-root
 
       - name: Boot emulator + run protocol chain + real adb smoke
-        uses: reactivecircus/android-emulator-runner@v2
+        uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d # v2.38.0
         with:
           api-level: 30
           target: default
           arch: x86_64
           profile: pixel_7
-          emulator-options: -no-snapshot -no-audio -no-boot-anim -camera-back none
-          script: |
-            set -euo pipefail
-            adb wait-for-device
-            SERIAL="$(adb get-serialno)"
-            echo "Emulator serial: ${SERIAL}"
-            echo "--- 1/3 android-backend suite (real TCP/WS, mock phone) ---"
-            npm test --workspace=@phonehands/android-backend
-            echo "--- 2/3 wireless-demo assertions ---"
-            PHONEHANDS_RELAY_URL="ws://127.0.0.1:8099/phonehands-android" \
-              node examples/android-wireless-demo/demo.ts
-            echo "--- 3/3 real adb smoke (real Android OS, our cmd builders) ---"
-            ANDROID_SERIAL="${SERIAL}" node examples/android-wireless-demo/emulator-smoke.ts
+          emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -no-audio -no-boot-anim -camera-back none
+          script: bash scripts/ci/android-emulator-smoke.sh

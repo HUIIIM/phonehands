@@ -110,12 +110,15 @@ relay 就是 `@phonehands/android-backend` 的 `AndroidRelayServer`，
 
 | 拓扑 | `PHONEHANDS_RELAY_URL`（手机填） | 说明 |
 |---|---|---|
-| 本机联调 | `ws://127.0.0.1:9011/phonehands-android` | 手机连电脑开的 relay（同一 WiFi 下把 127.0.0.1 换成电脑 IP） |
-| SSH 反向隧道 | `ws://<跳板机>:9011/phonehands-android` | 手机在外网：跳板机 `ssh -R 9011:localhost:9011 agent-box`，流量经你自己的跳板机 |
-| Tailscale | `ws://<agent 的 tailnet 名>:9011/phonehands-android` | 两端进同一个 tailnet，端到端加密，不走公网 |
+| 本机联调 | `ws://127.0.0.1:9011/phonehands-android` | USB 连电脑后 `adb reverse tcp:9011 tcp:9011`，手机的 127.0.0.1 就是电脑的 relay |
+| SSH 反向隧道 | `wss://<跳板机域名>/phonehands-android` | 手机在外网：跳板机 `ssh -R 127.0.0.1:9011:localhost:9011 agent-box`，跳板机上 Nginx 终止 TLS 再转发到 `127.0.0.1:9011` |
+| Tailscale | `ws://<agent 的 MagicDNS 名>.ts.net:9011/phonehands-android` | 两端进同一个 tailnet，WireGuard 端到端加密，不走公网（headscale 用 `<名>.phonehands.tailnet`） |
 
+- 手机端明文 `ws://` 只放行 `127.0.0.1` / `localhost` / `*.ts.net` / `*.phonehands.tailnet`
+  （`app/src/main/res/xml/network_security_config.xml`）；其它地址（局域网 IP、公网域名、tailnet 的 100.x IP 字面量）一律要 `wss://`，否则 Android 直接拒连。
 - 跨公网一律用 `wss://`（TLS 终止在你自己的反向代理/Nginx）。
-- 可选共享密钥：agent 侧 `authToken`，手机设置页填同样的 token；
+- relay 只要不是绑在 loopback（`bindHost` ≠ `127.0.0.1` / `::1` / `localhost`），**必须**配 `authToken`，否则 `AndroidRelayServer` 构造时直接报错拒绝启动。
+- 共享密钥：agent 侧 `authToken`（loopback 上可选，其它地址必填），手机设置页填同样的 token；
   对不上服务端直接掐线（4403）。token 只走 `hello` 消息体，
   **永不进 URL、永不打日志**（门 5 有单测断言）。
 

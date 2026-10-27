@@ -19,6 +19,7 @@ import {
   closeSync,
   renameSync,
   readFileSync,
+  chmodSync,
   statSync,
   unlinkSync,
 } from "node:fs";
@@ -80,6 +81,10 @@ export class SessionStore {
 
   private ensureDir(): void {
     mkdirSync(this.baseDir, { recursive: true, mode: 0o700 });
+    // mkdir's mode only applies on creation: tighten a pre-existing dir too.
+    if ((statSync(this.baseDir).mode & 0o077) !== 0) {
+      chmodSync(this.baseDir, 0o700);
+    }
   }
 
   /** Persist a session atomically: temp (O_EXCL, 0600) -> fsync -> rename. */

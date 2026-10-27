@@ -13,4 +13,11 @@ if (PHONEHANDS_READ_ONLY) {
 }
 
 /** Write actions available in a full (non-read-only) build. */
-export const REGISTERED_WRITE_ACTIONS: readonly ActionName[] = ["tap", "tap_text", "swipe", "type_text"];
+export const REGISTERED_WRITE_ACTIONS: readonly ActionName[] = [
+  "tap",
+  "tap_text",
+  "swipe",
+  "type_text",
+  "launch_app",
+  "press_home",
+];
