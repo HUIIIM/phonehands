@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Cleartext (ws://) is allowed ONLY for loopback (adb reverse / local dev) and
+  tailnet names (Tailscale MagicDNS *.ts.net, setup.sh headscale base domain
+  phonehands.tailnet), where WireGuard already encrypts the link. Everything
+  else must use wss:// (TLS). Tailnet IP literals (100.x) are not matchable
+  here: use the MagicDNS name instead.
+-->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="false" />
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="false">127.0.0.1</domain>
+        <domain includeSubdomains="false">localhost</domain>
+        <domain includeSubdomains="true">ts.net</domain>
+        <domain includeSubdomains="true">phonehands.tailnet</domain>
+    </domain-config>
+</network-security-config>

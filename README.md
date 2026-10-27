@@ -145,7 +145,7 @@ graph LR
 
 ## 现状与边界
 
-v0.1.0，未发布。仓库已公开（GC 放行 GC-20261022-024）；npm 包全部 `private: true`，未发布。仓库目前没有在 PR 上运行的 CI；已接入的 workflow 是 iOS Simulator 与 Android Emulator 协议链（手动＋每周）。
+v0.1.0，未发布。仓库已公开（GC 放行 GC-20261022-024）；npm 包全部 `private: true`，未发布。每次推送 `main` 和每个 PR 都跑 `.github/workflows/ci.yml`（按锁文件安装、tsc 构建、全部 mock 测试、只读构建测试、`npm audit` high 及以上）；iOS Simulator 与 Android Emulator 协议链为手动＋每周。
 
 **目前做不到**：API 写操作（Phase 2）；微信类自绘 UI 的精准定位；免费 Apple ID 签名 7 天有效期需续签；iOS 跨网真无线（受苹果平台限制，不承诺；当前路径是 Mac＋备用 iPhone 固定拓扑）；MCP 服务（目前没有）。
 

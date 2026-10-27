@@ -160,8 +160,9 @@ There is no SECURITY.md vulnerability-reporting process in the repository yet.
 ## Status and limitations
 
 v0.1.0, unreleased. The repository is public (released under GC-20261022-024), and every npm package
-is `private: true`. No CI runs on pull requests yet; the workflows in place are the iOS Simulator and Android
-Emulator protocol chains (manual + weekly).
+is `private: true`. Every push to `main` and every pull request runs `.github/workflows/ci.yml` (lockfile install, tsc
+build, all mock test suites, read-only build tests, `npm audit` high+); the iOS Simulator and Android
+Emulator protocol chains run manually + weekly.
 
 **Not supported today**: API writes (Phase 2); precise targeting on self-drawn UIs such as WeChat; free Apple ID
 signing expires every 7 days and needs re-signing; true cross-network wireless on iOS (an Apple platform

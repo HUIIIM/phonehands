@@ -11,6 +11,10 @@
  *    mutating actions uncertain (MV427: never auto-replay uncertain input)
  *  - sends ping every 30s; drops sockets idle > 90s
  *
+ *  - refuses a non-loopback bindHost without an authToken (fail closed)
+ *  - closes sockets that send no valid hello within helloTimeoutMs, and caps
+ *    inbound message size (maxPayloadBytes)
+ *
  * Secrets: hello.token is compared in constant-ish time and never logged;
  * log lines use describeMessage() (token reduced to present/absent).
  */
@@ -33,6 +37,7 @@ import type {
 
 const PING_INTERVAL_MS = 30_000;
 const IDLE_TIMEOUT_MS = 90_000;
+const LOOPBACK_BIND_HOSTS = new Set(["127.0.0.1", "::1", "localhost"]);
 
 interface PendingAction {
   resolve: (ack: AckMessage | null) => void;
@@ -76,8 +81,16 @@ export class AndroidRelayServer {
       bindHost: "127.0.0.1",
       authToken: "",
       actionTimeoutMs: 15_000,
+      helloTimeoutMs: 10_000,
+      maxPayloadBytes: 16 * 1024 * 1024,
       ...options,
     };
+    if (!this.options.authToken && !LOOPBACK_BIND_HOSTS.has(this.options.bindHost.toLowerCase())) {
+      throw new Error(
+        `android-relay: refusing to bind ${this.options.bindHost} without an authToken ` +
+          "(an unauthenticated non-loopback relay lets anyone impersonate the phone)",
+      );
+    }
   }
 
   /** OS-assigned port after start() (useful with port: 0 in tests). */
@@ -93,6 +106,7 @@ export class AndroidRelayServer {
     this.wss = new WebSocketServer({
       host: this.options.bindHost,
       port: this.options.port,
+      maxPayload: this.options.maxPayloadBytes,
     });
     await new Promise<void>((resolve, reject) => {
       this.wss!.once("listening", () => resolve());
@@ -157,6 +171,10 @@ export class AndroidRelayServer {
 
   private handleConnection(ws: WebSocket): void {
     let deviceId: string | null = null;
+    const helloTimer = setTimeout(() => {
+      if (deviceId === null) ws.close(4408, "hello timeout");
+    }, this.options.helloTimeoutMs);
+    helloTimer.unref?.();
     ws.on("message", (data) => {
       let msg;
       try {
@@ -181,6 +199,7 @@ export class AndroidRelayServer {
           return;
         }
         deviceId = hello.device_id;
+        clearTimeout(helloTimer);
         // Dedupe: a reconnecting phone replaces its stale socket.
         // NOTE: local const keeps the registered id as `string`; the closure
         // variable `deviceId` stays `string | null` for the hello gate above.
@@ -232,6 +251,7 @@ export class AndroidRelayServer {
     });
 
     const forget = () => {
+      clearTimeout(helloTimer);
       if (deviceId && this.devices.get(deviceId)?.ws === ws) {
         this.devices.delete(deviceId);
         this.onDeviceLost?.(deviceId);

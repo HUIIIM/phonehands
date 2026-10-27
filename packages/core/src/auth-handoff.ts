@@ -106,7 +106,8 @@ export class AuthHandoff {
   private armTimer(accountId: string): void {
     this.clearTimer(accountId);
     const timer = setTimeout(() => this.onTimeout(accountId), this.resumeTimeoutMs);
-    (timer as unknown as { unref?: () => void }).unref?.();
+    // Not unref'd: the resume timeout must fire to release the queue.
+    // resume() clears it, so it only lives while an account is paused.
     this.timers.set(accountId, timer);
   }
 

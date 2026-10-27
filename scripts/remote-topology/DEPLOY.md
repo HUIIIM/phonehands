@@ -210,9 +210,10 @@ Android 路径：agent <── WebSocket ── 自托管 agent（手机直连�
   第三方连"谁在跟谁说话"都看不到。
 - 第二条腿 **SSH 反向隧道**：连 mesh 都不想搭时，一条 SSH 命令把端口反向打到你自己的服务器，
   照样不经过第三方。
-  - 安全注意：反向隧道在**你服务器上绑 `0.0.0.0:$PORT`**，能连上该端口的人就能直接开你的 iPhone。
-    生产用法是在服务器上加一层 nginx 反向代理做 basic-auth 鉴权（鉴权放 nginx 层，别放被代理的应用里——
-    应用自带鉴权常会掐长连接/websocket），隧道只绑 `127.0.0.1` 让 nginx 转发；或改 `-R` 为 `127.0.0.1:$PORT` 再 SSH 跳过去。
+  - 安全注意：WDA 没有任何鉴权，能连上隧道端口的人就能直接开你的 iPhone。所以 setup.sh **默认只在服务器上绑 `127.0.0.1:$PORT`**
+    （2026-10-26 起；之前绑 `0.0.0.0`）。要从外面连，在服务器上加一层 nginx 反向代理做 basic-auth 鉴权（鉴权放 nginx 层，别放被代理的应用里——
+    应用自带鉴权常会掐长连接/websocket），由 nginx 转发到 `127.0.0.1:$PORT`；或者 SSH 到服务器上再访问。
+    确实要绑公网地址时显式设 `PHONEHANDS_SSH_TUNNEL_BIND=0.0.0.0`（脚本会告警；服务器 sshd 还需 `GatewayPorts clientspecified`）。
   - 断线自愈：setup.sh 已内置 watchdog 循环，隧道断后约 5 秒自动重连（2026-10-10 落）。
 
 ### headscale vs 官方 Tailscale 功能差

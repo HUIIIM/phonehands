@@ -31,6 +31,9 @@ on:
     # Weekly, Monday 09:00 UTC (05:00 ET) — cheap, off-peak.
     - cron: "0 9 * * 1"
 
+permissions:
+  contents: read
+
 jobs:
   android-emulator:
     runs-on: ubuntu-latest
@@ -38,10 +41,9 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
-
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
       - name: Set up Node.js 24
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: 24
           cache: npm
@@ -66,7 +68,7 @@ jobs:
           sudo udevadm trigger --name-match=kvm
 
       - name: Boot emulator + run protocol chain + real adb smoke
-        uses: reactivecircus/android-emulator-runner@v2
+        uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d # v2.38.0
         with:
           # API 30 + default target: boots in ~1-2 min on hosted runners.
           # (API 34 google_apis never finished booting within the action's

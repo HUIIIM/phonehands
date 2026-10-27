@@ -100,8 +100,15 @@ export interface RelayServerOptions {
   port: number;
   /** Bind host. Default "127.0.0.1". */
   bindHost?: string;
-  /** Optional shared secret; phones must present it in hello.token. */
+  /**
+   * Shared secret; phones must present it in hello.token. Optional only on a
+   * loopback bindHost — any other bindHost without a token is refused.
+   */
   authToken?: string;
   /** Per-action ack timeout. Default 15_000. */
   actionTimeoutMs?: number;
+  /** A socket that has not sent a valid hello by then is closed. Default 10_000. */
+  helloTimeoutMs?: number;
+  /** Max inbound message size in bytes. Default 16 MiB (one JPEG frame). */
+  maxPayloadBytes?: number;
 }

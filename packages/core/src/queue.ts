@@ -139,8 +139,9 @@ export class SerialOpQueue {
       const timer = setTimeout(() => {
         reject(new TimeoutUnknownError(accountId, deadlineMs));
       }, deadlineMs);
-      // Do not let the timer alone keep the process alive.
-      (timer as unknown as { unref?: () => void }).unref?.();
+      // Deliberately NOT unref'd: the deadline is part of the contract
+      // (TIMEOUT_UNKNOWN must fire). The timer is cleared as soon as the op
+      // settles, so it only keeps the process alive while an op is pending.
       op().then(
         (value) => {
           clearTimeout(timer);
