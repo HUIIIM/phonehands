@@ -64,6 +64,10 @@ class AgentService : Service() {
             private set
     }
 
+    // Two threads on purpose: connectLoop() blocks its thread for the whole
+    // socket session, so actions must run on a different executor or they
+    // would queue behind it forever (every action would time out).
+    private val connector = Executors.newSingleThreadExecutor()
     private val io = Executors.newSingleThreadExecutor()
     private var ws: WebSocket? = null
     private var screenCapture: ScreenCapture? = null
@@ -95,14 +99,16 @@ class AgentService : Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         if (intent?.action == ACTION_START) {
-            startForegroundCompat()
-            acquireWakeLock()
-            stopRequested = false
             val resultCode = intent.getIntExtra(EXTRA_RESULT_CODE, -1)
             val consentData: Intent? =
                 if (Build.VERSION.SDK_INT >= 33) intent.getParcelableExtra(EXTRA_CONSENT_DATA, Intent::class.java)
                 else @Suppress("DEPRECATION") intent.getParcelableExtra(EXTRA_CONSENT_DATA)
-            io.execute {
+            // Only claim the mediaProjection FGS type when consent exists:
+            // Android 14 throws SecurityException otherwise (gestures-only mode).
+            startForegroundCompat(withProjection = resultCode != -1 && consentData != null)
+            acquireWakeLock()
+            stopRequested = false
+            connector.execute {
                 if (resultCode != -1 && consentData != null) startScreenCapture(resultCode, consentData)
                 connectLoop()
             }
@@ -115,6 +121,7 @@ class AgentService : Service() {
         runCatching { ws?.close(1000, "service destroyed") }
         runCatching { screenCapture?.stop() }
         runCatching { wakeLock?.takeIf { it.isHeld }?.release() }
+        connector.shutdownNow()
         io.shutdownNow()
         running = false
         super.onDestroy()
@@ -275,7 +282,7 @@ class AgentService : Service() {
         return metrics.widthPixels to metrics.heightPixels
     }
 
-    private fun startForegroundCompat() {
+    private fun startForegroundCompat(withProjection: Boolean) {
         val nm = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val channelId = "phonehands-agent"
         if (Build.VERSION.SDK_INT >= 26) {
@@ -297,11 +304,13 @@ class AgentService : Service() {
                 .build()
         }
         if (Build.VERSION.SDK_INT >= 29) {
-            startForeground(
-                1, notification,
+            val type = if (withProjection) {
                 ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PROJECTION or
                     ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC
-            )
+            } else {
+                ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC
+            }
+            startForeground(1, notification, type)
         } else {
             @Suppress("DEPRECATION")
             startForeground(1, notification)

@@ -1,0 +1,87 @@
+# Real headscale server + real Tailscale client on one Linux runner, driven by
+# the exact scripts setup.sh pipes to the user's server over ssh:
+#   headscale-server-install.sh  (pinned + sha256-verified binary, config, systemd)
+#   headscale-mint-key.sh        (user ID lookup + pre-auth key)
+# then a Tailscale client joins with that key, as the Mac does in setup.sh.
+name: headscale-e2e
+
+on:
+  workflow_dispatch: {}
+  pull_request:
+    paths:
+      - .github/workflows/headscale-e2e.yml
+      - scripts/remote-topology/**
+  schedule:
+    - cron: "17 9 * * 1"
+
+permissions:
+  contents: read
+
+jobs:
+  headscale:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      TS_VERSION: "1.104.4"
+      TS_SHA256: 624ea093d47d62cf56f17b8332d74b8decda4a1faa610ebc60a1de334b2b3dc9
+      TS_SOCK: /tmp/tailscaled.sock
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Install headscale server (scripts/remote-topology/headscale-server-install.sh)
+        run: bash scripts/remote-topology/headscale-server-install.sh http://127.0.0.1:8080 8080 v0.29.6 ""
+
+      - name: headscale is healthy
+        run: |
+          for _ in $(seq 1 30); do
+            curl -fsS http://127.0.0.1:8080/health && exit 0
+            sleep 1
+          done
+          sudo journalctl -u headscale -n 100 --no-pager
+          exit 1
+
+      - name: Mint a pre-auth key (scripts/remote-topology/headscale-mint-key.sh)
+        id: key
+        run: |
+          key="$(bash scripts/remote-topology/headscale-mint-key.sh phonehands)"
+          echo "::add-mask::$key"
+          case "$key" in
+            hskey-auth-*-*) ;;
+            *) echo "::error::unexpected key format (len ${#key})"; exit 1 ;;
+          esac
+          echo "key=$key" >> "$GITHUB_OUTPUT"
+
+      - name: Install Tailscale client (pinned, sha256-verified)
+        run: |
+          curl -fsSL -o ts.tgz "https://pkgs.tailscale.com/stable/tailscale_${TS_VERSION}_amd64.tgz"
+          echo "${TS_SHA256}  ts.tgz" | sha256sum -c -
+          tar xzf ts.tgz
+          sudo install -m 0755 "tailscale_${TS_VERSION}_amd64/tailscale" "tailscale_${TS_VERSION}_amd64/tailscaled" /usr/local/bin/
+
+      - name: Join the tailnet with the minted key (as setup.sh does on the Mac)
+        env:
+          AUTHKEY: ${{ steps.key.outputs.key }}
+        run: |
+          sudo tailscaled --tun=userspace-networking --statedir=/tmp/tailscale --socket="$TS_SOCK" > /tmp/tailscaled.log 2>&1 &
+          for _ in $(seq 1 20); do [ -S "$TS_SOCK" ] && break; sleep 0.5; done
+          sudo tailscale --socket="$TS_SOCK" up --login-server=http://127.0.0.1:8080 \
+            --authkey="$AUTHKEY" --hostname=phonehands-mac --timeout=90s
+
+      - name: Assert the node is registered and addressed
+        run: |
+          ip="$(sudo tailscale --socket="$TS_SOCK" ip -4 | head -n 1)"
+          echo "tailnet IPv4: $ip"
+          case "$ip" in 100.*) ;; *) echo "::error::no 100.64/10 address"; exit 1 ;; esac
+          sudo headscale nodes list --user phonehands
+          sudo headscale nodes list --user phonehands | grep -qi phonehands-mac
+          # The exact pipeline setup.sh uses to derive the MagicDNS name:
+          name="$(sudo -n headscale nodes list --user 'phonehands' 2>/dev/null | grep -i "phonehands-mac" | awk '{print $2}' | head -n 1)"
+          echo "setup.sh node_name: '$name'"
+          echo "$name" | grep -Eq '^[a-z0-9-]+$' || { echo "::error::setup.sh would derive an invalid node name"; exit 1; }
+
+      - name: Diagnostics
+        if: failure()
+        run: |
+          sudo journalctl -u headscale -n 150 --no-pager || true
+          cat /tmp/tailscaled.log || true
+          sudo cat /etc/headscale/config.yaml || true
