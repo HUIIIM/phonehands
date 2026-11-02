@@ -334,7 +334,8 @@ EOF
   local node_name=""
   if [ -n "$ssh_host" ]; then
     node_name="$(ssh -o ConnectTimeout=10 "$ssh_host" \
-      "sudo -n headscale nodes list --user '${HEADSCALE_USER}' 2>/dev/null" | grep -i "phonehands-mac" | awk '{print $2}' | head -n 1 || true)"
+      "sudo -n headscale nodes list --user '${HEADSCALE_USER}' -o json 2>/dev/null" \
+      | "$SCRIPT_DIR/headscale-node-name.sh" phonehands-mac || true)"
   fi
   local dial="$ip"
   if [ -n "$node_name" ]; then

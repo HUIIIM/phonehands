@@ -75,9 +75,14 @@ jobs:
           sudo headscale nodes list --user phonehands
           sudo headscale nodes list --user phonehands | grep -qi phonehands-mac
           # The exact pipeline setup.sh uses to derive the MagicDNS name:
-          name="$(sudo -n headscale nodes list --user 'phonehands' 2>/dev/null | grep -i "phonehands-mac" | awk '{print $2}' | head -n 1)"
+          name="$(sudo -n headscale nodes list --user 'phonehands' -o json 2>/dev/null \
+            | bash scripts/remote-topology/headscale-node-name.sh phonehands-mac)"
           echo "setup.sh node_name: '$name'"
-          echo "$name" | grep -Eq '^[a-z0-9-]+$' || { echo "::error::setup.sh would derive an invalid node name"; exit 1; }
+          [ "$name" = "phonehands-mac" ] || { echo "::error::setup.sh would derive node name '$name'"; exit 1; }
+          # setup.sh then dials "${name}.phonehands.tailnet": that must be this node's MagicDNS name.
+          fqdn="$(sudo tailscale --socket="$TS_SOCK" status --json | python3 -c 'import json,sys;print(json.load(sys.stdin)["Self"]["DNSName"].rstrip("."))')"
+          echo "MagicDNS FQDN: $fqdn"
+          [ "$fqdn" = "${name}.phonehands.tailnet" ] || { echo "::error::MagicDNS name mismatch"; exit 1; }
 
       - name: Diagnostics
         if: failure()
