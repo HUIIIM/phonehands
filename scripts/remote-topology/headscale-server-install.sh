@@ -27,6 +27,37 @@ if ! command -v headscale >/dev/null 2>&1; then
 fi
 sudo mkdir -p /etc/headscale /var/lib/headscale
 if [ ! -f /etc/headscale/config.yaml ]; then
+  # headscale refuses to start with an empty DERP map. Embedded DERP needs TLS,
+  # so: https control URL -> our own embedded DERP + STUN (nothing third-party);
+  # plain http -> Tailscale's public DERP relays (they forward only end-to-end
+  # encrypted WireGuard packets, but do see IP addresses).
+  case "$SERVER_URL" in
+    https://*)
+      DERP_BLOCK="derp:
+  server:
+    enabled: true
+    region_id: 999
+    region_code: phonehands
+    region_name: phonehands embedded DERP
+    verify_clients: true
+    stun_listen_addr: 0.0.0.0:3478
+    private_key_path: /var/lib/headscale/derp_server_private.key
+    automatically_add_embedded_derp_region: true
+  urls: []
+  paths: []
+  auto_update_enabled: false" ;;
+    *)
+      echo "WARNING: $SERVER_URL is not https — the embedded DERP relay needs TLS, so" >&2
+      echo "         relaying falls back to Tailscale's public DERP servers (they see IPs," >&2
+      echo "         not traffic). Use an https:// control URL to keep relays on your server." >&2
+      DERP_BLOCK="derp:
+  server:
+    enabled: false
+  urls:
+    - https://controlplane.tailscale.com/derpmap/default
+  paths: []
+  auto_update_enabled: true" ;;
+  esac
   # Schema matches the pinned release's config-example.yaml (0.23+ keys:
   # noise.private_key_path, dns.*); the noise key is generated on first start.
   sudo tee /etc/headscale/config.yaml >/dev/null <<YAML
@@ -37,12 +68,7 @@ noise:
 prefixes:
   v4: 100.64.0.0/10
   v6: fd7a:115c:a1e0::/48
-derp:
-  server:
-    enabled: false
-  urls: []
-  paths: []
-  auto_update_enabled: false
+${DERP_BLOCK}
 database:
   type: sqlite
   sqlite:

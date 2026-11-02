@@ -40,7 +40,7 @@ for _ in $(seq 1 10); do
   xy="$(python3 - "$LOG_DIR/ui.xml" <<'PY' || true
 import re, sys
 xml = open(sys.argv[1], encoding="utf-8", errors="replace").read()
-m = re.search(r'text="Start agent service"[^>]*bounds="\[(\d+),(\d+)\]\[(\d+),(\d+)\]"', xml)
+m = re.search(r'text="Start agent service"[^>]*bounds="\[(\d+),(\d+)\]\[(\d+),(\d+)\]"', xml, re.I)  # Material upper-cases labels
 if m:
     x1, y1, x2, y2 = map(int, m.groups())
     print((x1 + x2) // 2, (y1 + y2) // 2)

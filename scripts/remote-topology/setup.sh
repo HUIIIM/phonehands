@@ -270,7 +270,7 @@ headscale_install_server() {
 
   echo "  About to install on YOUR server $(redact "$ssh_host") (system change — needs your OK):"
   echo "    - download headscale binary (pinned version, sha256-verified) -> /usr/local/bin/headscale"
-  echo "    - write /etc/headscale/config.yaml (minimal: MagicDNS on, no third-party DERP)"
+  echo "    - write /etc/headscale/config.yaml (MagicDNS on; DERP relay on your server for https://, Tailscale public DERP for http://)"
   echo "    - enable + start systemd service 'headscale'"
   if [ "$YES" = "0" ] && [ "$HEADSCALE_INSTALL" = "0" ]; then
     printf '  Install headscale on the server? [y/N] '; read -r ans
