@@ -206,8 +206,10 @@ Android 路径：agent <── WebSocket ── 自托管 agent（手机直连�
 我们的做法：**连组网的大脑（coordination server）都是你自己的**。
 
 - 默认走 **headscale 自托管**：你在自己服务器上跑一个 headscale（开源，BSD-3），
-  Mac 和远端操作机组成 WireGuard 加密 mesh——协调服务器是你的，数据通道是端到端加密的，
-  第三方连"谁在跟谁说话"都看不到。
+  Mac 和远端操作机组成 WireGuard 加密 mesh——协调服务器是你的，数据通道是端到端加密的。
+  中转（DERP）取决于控制面地址：**`https://`** 时用 headscale 自带的 DERP + STUN，全部在你服务器上，
+  第三方连"谁在跟谁说话"都看不到；**`http://`** 时（自带 DERP 需要 TLS）退回 Tailscale 的公共 DERP 节点，
+  它们只转发加密包、看不到内容，但能看到双方 IP——setup.sh 会告警。
 - 第二条腿 **SSH 反向隧道**：连 mesh 都不想搭时，一条 SSH 命令把端口反向打到你自己的服务器，
   照样不经过第三方。
   - 安全注意：WDA 没有任何鉴权，能连上隧道端口的人就能直接开你的 iPhone。所以 setup.sh **默认只在服务器上绑 `127.0.0.1:$PORT`**
@@ -225,8 +227,8 @@ Android 路径：agent <── WebSocket ── 自托管 agent（手机直连�
 | ACL 访问控制 | 有（policy 文件） | 有（管理后台点选） |
 | 节点注册 | pre-auth key（脚本自动办） | 浏览器登录点一下 |
 | 管理后台 | 无官方后台（有第三方开源面板） | 有 |
-| DERP 中转 | 默认关（纯直连；NAT 复杂环境可自建） | 官方 DERP 全球节点 |
-| 数据/账号经过第三方 | **零** | 登录与协调走 Tailscale 账号体系 |
+| DERP 中转 | `https://` 控制面：自带（在你服务器上）；`http://`：Tailscale 公共节点（headscale 不允许空 DERP 表） | 官方 DERP 全球节点 |
+| 数据/账号经过第三方 | `https://` 控制面时**零**；`http://` 时仅加密包经公共 DERP 中转（可见 IP） | 登录与协调走 Tailscale 账号体系 |
 
 **一句话**：headscale 把"方便"换成了"主权"。长期跑，选 headscale；临时顶一下，用官方版。
 

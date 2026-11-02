@@ -11,7 +11,9 @@ import android.os.Build
 import android.os.Bundle
 import android.os.PowerManager
 import android.provider.Settings
+import android.text.InputType
 import android.widget.Button
+import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
@@ -25,7 +27,7 @@ import android.widget.Toast
  * 2. Screen capture consent — one system dialog, result is held in memory only.
  * 3. Battery optimization whitelist — so Doze doesn't starve the socket.
  *
- * Relay URL + token are typed here and stored in SharedPreferences; the
+ * Relay URL + token are typed here (RelayConfig -> SharedPreferences); the
  * phone then dials OUT to the agent relay (NAT-safe, no port forwarding).
  */
 class MainActivity : Activity() {
@@ -43,6 +45,23 @@ class MainActivity : Activity() {
             setPadding(48, 48, 48, 48)
         }
         status = TextView(this)
+        val relayUrl = EditText(this).apply {
+            hint = "Relay URL (ws:// loopback/tailnet, else wss://)"
+            setText(RelayConfig.getRelayUrl(this@MainActivity))
+            inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_URI
+        }
+        val relayToken = EditText(this).apply {
+            hint = "Relay token (required unless the relay is on loopback)"
+            inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+        }
+        val btnSave = Button(this).apply { text = "Save relay settings" }
+        btnSave.setOnClickListener {
+            RelayConfig.setRelayUrl(this, relayUrl.text.toString().trim())
+            // An empty field keeps the saved token (it is never shown back).
+            relayToken.text.toString().takeIf { it.isNotEmpty() }?.let { RelayConfig.setToken(this, it) }
+            relayToken.text.clear()
+            Toast.makeText(this, "saved; (re)start the agent service to apply", Toast.LENGTH_SHORT).show()
+        }
         val btnA11y = Button(this).apply { text = "1. Enable accessibility service" }
         val btnCapture = Button(this).apply { text = "2. Allow screen capture" }
         val btnBattery = Button(this).apply { text = "3. Disable battery optimization" }
@@ -54,6 +73,9 @@ class MainActivity : Activity() {
         btnStart.setOnClickListener { startAgentServiceWithoutCapture() }
 
         layout.addView(status)
+        layout.addView(relayUrl)
+        layout.addView(relayToken)
+        layout.addView(btnSave)
         layout.addView(btnA11y)
         layout.addView(btnCapture)
         layout.addView(btnBattery)

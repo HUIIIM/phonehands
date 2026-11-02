@@ -33,6 +33,7 @@ on:
       - .github/workflows/android-emulator.yml
       - packages/android-backend/**
       - examples/android-wireless-demo/**
+      - packages/android-helper/**
       - scripts/ci/**
   schedule:
     # Weekly, Monday 09:00 UTC (05:00 ET) — cheap, off-peak.
@@ -57,6 +58,20 @@ jobs:
 
       - name: Install JS dependencies
         run: npm ci --workspaces --include-workspace-root
+
+      - name: Set up JDK 17 (helper APK)
+        uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5.7.0
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@0723195856401067f7a2779048b490ace7a47d7c # v5.0.2
+        with:
+          gradle-version: "8.14.3"
+
+      - name: Build the helper APK (installed on the emulator below)
+        run: gradle -p packages/android-helper :app:assembleDebug --no-daemon
 
       - name: Install emulator host libs
         # qemu-system-x86_64 dynamically links libpulse even with -no-audio;
@@ -88,5 +103,13 @@ jobs:
           arch: x86_64
           profile: pixel_7
           emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -no-audio -no-boot-anim -camera-back none
-          script: bash scripts/ci/android-emulator-smoke.sh
+          script: bash scripts/ci/android-emulator-smoke.sh && bash scripts/ci/android-apk-e2e.sh
+
+      - name: Upload APK e2e logs
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: apk-e2e-logs
+          path: ${{ runner.temp }}/apk-e2e/
+          if-no-files-found: ignore
 # retrigger 2026-10-10T02:59:58Z
