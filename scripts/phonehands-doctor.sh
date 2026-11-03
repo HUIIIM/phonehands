@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# SPDX-License-Identifier: BUSL-1.1
+# SPDX-License-Identifier: MIT
 #
 # phonehands-doctor: one-shot environment diagnosis for the phonehands device engine.
 #

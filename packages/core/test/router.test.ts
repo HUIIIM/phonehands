@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: BUSL-1.1
+// SPDX-License-Identifier: MIT
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
 import { capabilitiesFor } from "../src/backend.ts";

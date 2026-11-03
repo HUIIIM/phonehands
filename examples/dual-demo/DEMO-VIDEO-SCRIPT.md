@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: BUSL-1.1 -->
+<!-- SPDX-License-Identifier: MIT -->
 
 # phonehands demo 视频脚本 A《API 死了，任务没死》· 30 秒分镜
 

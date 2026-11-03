@@ -1,6 +1,8 @@
 # Android 包质量门禁自检表（2026-10-09）
 
-<!-- SPDX-License-Identifier: BUSL-1.1 -->
+> **历史记录**：本页是当时的自检快照，其中的 BSL / `BUSL-1.1` 字样反映当时的许可证。2026-10-31 起本仓改为 MIT（见 LICENSE），现行头为 `SPDX-License-Identifier: MIT`。
+
+<!-- SPDX-License-Identifier: MIT -->
 
 > 包：`packages/android-backend`（TS）＋ `packages/android-helper`（Kotlin APK）
 > ＋ `examples/android-wireless-demo`。标准：`docs/quality-gates.md`。

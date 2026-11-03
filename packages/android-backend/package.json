@@ -11,7 +11,7 @@
   "files": [
     "dist"
   ],
-  "license": "SEE LICENSE IN LICENSE file",
+  "license": "MIT",
   "main": "./src/index.ts",
   "name": "@phonehands/android-backend",
   "scripts": {

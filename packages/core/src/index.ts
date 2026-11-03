@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: BUSL-1.1
+// SPDX-License-Identifier: MIT
 // @phonehands/core public surface.
 
 export * from "./actions.ts";

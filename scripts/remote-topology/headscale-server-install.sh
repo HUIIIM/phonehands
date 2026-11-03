@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# SPDX-License-Identifier: BUSL-1.1
+# SPDX-License-Identifier: MIT
 # headscale server install — runs ON the user's Linux server (setup.sh pipes it
 # over ssh: `ssh host bash -s URL PORT VER SHA < headscale-server-install.sh`).
 # Kept as its own file so CI can run exactly this code on a real Linux host.

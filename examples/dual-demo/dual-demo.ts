@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: BUSL-1.1
+// SPDX-License-Identifier: MIT
 //
 // phonehands · examples/dual-demo — "API died, the task didn't"
 // ==========================================================
