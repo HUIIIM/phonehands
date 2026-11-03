@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: BUSL-1.1
+// SPDX-License-Identifier: MIT
 
 /**
  * emulator-smoke.ts — CI-only real-device smoke for gate 4a.

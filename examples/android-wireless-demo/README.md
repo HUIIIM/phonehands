@@ -1,6 +1,6 @@
 # android-wireless-demo
 
-<!-- SPDX-License-Identifier: BUSL-1.1 -->
+<!-- SPDX-License-Identifier: MIT -->
 
 End-to-end MVP proof for the Android wireless backend — **mock phone only**,
 no real device touched.

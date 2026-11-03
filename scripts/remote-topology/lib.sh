@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# SPDX-License-Identifier: BUSL-1.1
+# SPDX-License-Identifier: MIT
 #
 # phonehands remote-topology shared helpers.
 # Sourced (not executed) by setup.sh and healthcheck.sh.

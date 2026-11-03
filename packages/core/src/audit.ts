@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: BUSL-1.1
+// SPDX-License-Identifier: MIT
 // Audit log with defense-in-depth secret redaction.
 //
 // Primary rule (design charter §3.4): secrets NEVER enter logs —

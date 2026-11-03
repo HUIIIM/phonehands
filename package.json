@@ -1,6 +1,6 @@
 {
   "description": "Dual-engine phone-agent framework: one speaks API, one taps glass.",
-  "license": "SEE LICENSE IN LICENSE file",
+  "license": "MIT",
   "name": "phonehands",
   "private": true,
   "version": "0.1.0",

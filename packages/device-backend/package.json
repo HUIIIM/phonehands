@@ -7,7 +7,7 @@
   "exports": {
     ".": "./src/index.ts"
   },
-  "license": "SEE LICENSE IN LICENSE file",
+  "license": "MIT",
   "main": "./src/index.ts",
   "name": "@phonehands/device-backend",
   "private": true,

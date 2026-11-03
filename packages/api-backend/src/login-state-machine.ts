@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: BUSL-1.1
+// SPDX-License-Identifier: MIT
 
 /**
  * Login state machine (clean-room reimplementation of the pattern):

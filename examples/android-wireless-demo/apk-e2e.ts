@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: BUSL-1.1
+// SPDX-License-Identifier: MIT
 
 /**
  * apk-e2e — the REAL helper APK, on a real Android OS, through the REAL relay.

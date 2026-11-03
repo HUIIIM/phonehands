@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: BUSL-1.1
+// SPDX-License-Identifier: MIT
 
 /** Shared test helpers: a tiny localhost HTTP server for client/login tests. */
 import { createServer, type IncomingMessage, type Server, type ServerResponse } from "node:http";

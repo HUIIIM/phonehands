@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: BUSL-1.1 -->
+<!-- SPDX-License-Identifier: MIT -->
 
 # @phonehands/hinge-adapter
 
@@ -110,5 +110,5 @@ Suites: `mock-server` (endpoints + 412 + fault injection), `hinge-adapter`
 
 ## License
 
-`SPDX-License-Identifier: BUSL-1.1` on every
+`SPDX-License-Identifier: MIT` on every
 source file. Never MIT. Final legal text to be determined by GC.

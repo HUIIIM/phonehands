@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# SPDX-License-Identifier: BUSL-1.1
+# SPDX-License-Identifier: MIT
 #
 # healthcheck.sh — verify a phonehands remote operation endpoint.
 #

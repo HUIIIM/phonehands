@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: BUSL-1.1
+// SPDX-License-Identifier: MIT
 
 /**
  * simulator-live.test.ts — CI-only live test against a REAL WebDriverAgent

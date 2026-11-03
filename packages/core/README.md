@@ -50,6 +50,6 @@ importing them throws. Not a runtime flag.
 | queue: 32 cap, 30s deadline, timeout = unknown, no auto-replay | `test/queue.test.js` (incl. exactly-once invocation count) |
 | credentials never in logs | fake-password test in `test/auth-handoff.test.js` + `redactSecrets` tests |
 | loopback-only posture (core is transport-free) | `test/security.test.js`: no network imports in `src/` |
-| BSL-1.1 headers, no MIT | `test/security.test.js` header scan |
+| MIT SPDX headers, no leftover BUSL | `test/security.test.ts` header scan |
 
-License: `SPDX-License-Identifier: BUSL-1.1`. Never MIT.
+License: `SPDX-License-Identifier: MIT`. Never MIT.

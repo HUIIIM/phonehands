@@ -9,7 +9,7 @@
 - 测试命令一键可跑，写进包 README。
 
 ## 门 2：代码审查门
-- 双 agent 交叉 review（coordinator 在集成时组织）＋ self-review checklist：命名规范 / 错误处理全覆盖 / 日志脱敏 / BSL header。
+- 双 agent 交叉 review（coordinator 在集成时组织）＋ self-review checklist：命名规范 / 错误处理全覆盖 / 日志脱敏 / MIT SPDX 头。
 - **TODO/FIXME 不许进交付**；stub 必须显式标注 `STUB(issue#n)` 并关联 `docs/phase2-backlog.md` 或包内 ISSUES.md。
 
 ## 门 3：文档即契约门
@@ -22,7 +22,7 @@
 
 ## 门 5：安全审计门
 - secret 永不落日志：交付前 `grep -rniE "password|token|secret|otp|auth" --include="*.log"` 审计＋喂假 secret 进日志路径断言无残留。
-- BSL header 全文件：`grep -rL "SPDX-License-Identifier: BUSL-1.1" --include="*.ts" --include="*.sh" --include="*.kt"` 为空（除 NOTICE 声明的第三方改编文件）。
+- MIT SPDX 头全文件：`grep -rL "SPDX-License-Identifier: MIT" --include="*.ts" --include="*.sh" --include="*.kt"` 为空（除 NOTICE 声明的第三方改编文件）。
 - loopback-only 默认（测试断言拒绝远程地址）；编译期只读开关测试断言。
 
 ## 门 6：视觉门（demo 视频＋README）

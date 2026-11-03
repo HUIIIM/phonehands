@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: BUSL-1.1 -->
+<!-- SPDX-License-Identifier: MIT -->
 
 # PhoneHands Release SOP
 
@@ -24,7 +24,7 @@
 
 - [ ] CHANGELOG.md 同步写（三段式）
 - [ ] 测试全绿（覆盖率 ≥80% 门禁：TS 用 `c8 --check-coverage --lines 80`）
-- [ ] BSL header 抽查（新文件）：`SPDX-License-Identifier: BUSL-1.1`
+- [ ] SPDX 头抽查（新文件）：`SPDX-License-Identifier: MIT`
 - [ ] THIRD_PARTY_NOTICES.md：有新增依赖就更新
 - [ ] 打 tag → GitHub Release（粘贴三段式正文）→ 发版
 - [ ] 发版后 1 小时内：Discord #releases 公告＋X 一条（如有用户可见变化）
@@ -34,4 +34,4 @@
 - 不为凑数发版。
 - 不把 commit message 直接当 changelog。
 - 没过测试门禁不打 tag。
-- BSL header 缺失的文件不进 release。
+- 缺 `SPDX-License-Identifier: MIT` 头的文件不进 release。

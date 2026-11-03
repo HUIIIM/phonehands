@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: BUSL-1.1 -->
+<!-- SPDX-License-Identifier: MIT -->
 
 # 排障手册（Top 30）
 
@@ -66,5 +66,5 @@
 | # | 症状 | 原因 | 解法 |
 |---|------|------|------|
 | 28 | 日志里看到疑似 token | 脱敏漏了 | 立即按门 5 自查：`grep -rniE "password\|token\|secret\|otp\|auth" --include="*.log"`，提 P0 issue |
-| 29 | 不确定某用法算不算商用 | BSL 边界 | 看 `docs/license-faq.md`（Phase 3）；裁决前按"拿不准就先问"处理 |
+| 29 | 不确定某用法算不算商用 | 许可证范围 | 本体为 MIT，商用允许（保留版权与许可声明）；第三方组件按 THIRD_PARTY_NOTICES.md 各自的许可证 |
 | 30 | 以上都没覆盖 | — | 按 `.github/ISSUE_TEMPLATE/bug_report.yml` 模板提 issue，贴 doctor 输出（脱敏后） |
