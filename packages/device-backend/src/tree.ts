@@ -12,9 +12,7 @@ const ATTR_RE = /([A-Za-z0-9_]+)="([^"]*)"/g;
 
 function parseAttrs(attrString: string): Record<string, string> {
   const attrs: Record<string, string> = {};
-  ATTR_RE.lastIndex = 0;
-  let m: RegExpExecArray | null;
-  while ((m = ATTR_RE.exec(attrString)) !== null) {
+  for (const m of attrString.matchAll(ATTR_RE)) {
     attrs[m[1] as string] = m[2] as string;
   }
   return attrs;
@@ -38,9 +36,7 @@ export function parseAccessibilityTree(xml: string): UiTree | null {
   if (!xml || !xml.trim()) return null;
   const nodes: UiNode[] = [];
   let depth = 0;
-  TAG_RE.lastIndex = 0;
-  let m: RegExpExecArray | null;
-  while ((m = TAG_RE.exec(xml)) !== null) {
+  for (const m of xml.matchAll(TAG_RE)) {
     const closing = m[1] === "/";
     const tagName = m[2] as string;
     const attrString = m[3] as string;

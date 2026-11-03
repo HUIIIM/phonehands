@@ -176,7 +176,7 @@ export class AndroidRelayServer {
     }, this.options.helloTimeoutMs);
     helloTimer.unref?.();
     ws.on("message", (data) => {
-      let msg;
+      let msg: ReturnType<typeof decodeUplink>;
       try {
         msg = decodeUplink(data.toString());
       } catch (e) {

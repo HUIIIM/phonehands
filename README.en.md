@@ -16,8 +16,10 @@ engine and marks the result as degraded.
 | Languages | [简体中文](./README.md) · English |
 | Contact | Security: [SECURITY.md](SECURITY.md) (private reporting) · Product: [vertciti.com](https://vertciti.com) |
 
-The demo recording (8-second GIF, recorded from the real code path against local services) and product
-images are in [docs/assets](./docs/assets); they are linked rather than embedded.
+![PhoneHands degradation demo: the API returns 403 and the Router switches to the device engine (8 s, real code path, local services + mock data)](https://raw.githubusercontent.com/HUIIIM/phonehands/main/docs/assets/phonehands-demo-v2.gif)
+
+The demo recording (8-second GIF, real code path against local services and mock data); more product
+images are in [docs/assets](./docs/assets).
 
 ## Overview
 
