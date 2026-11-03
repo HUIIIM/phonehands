@@ -26,6 +26,8 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - name: Lint (biome, blocking on errors)
+        run: npm run lint
       - name: Build (tsc, all workspaces)
         run: npm run build
       - name: Generated build flags must match the committed file

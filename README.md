@@ -14,7 +14,9 @@
 | 语言 | 简体中文 · [English](./README.en.md) |
 | 联系 | 安全：[SECURITY.md](SECURITY.md)（私密报告） · 产品：[vertciti.com](https://vertciti.com) |
 
-演示录屏（8 秒 GIF，真实代码链路、本地服务录制）和产品图在 [docs/assets](./docs/assets)；这里只给链接、不内嵌图片。
+![PhoneHands 降级演示：API 返回 403 后 Router 切到设备引擎（8 秒，真实代码链路、本地服务 + mock 数据录制）](https://raw.githubusercontent.com/HUIIIM/phonehands/main/docs/assets/phonehands-demo-v2.gif)
+
+演示录屏（8 秒 GIF，真实代码链路、本地服务 + mock 数据录制）；更多产品图在 [docs/assets](./docs/assets)。
 
 ## 概览
 
