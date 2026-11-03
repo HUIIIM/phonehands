@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: BUSL-1.1
+// SPDX-License-Identifier: MIT
 // Shared types for @phonehands/core: backends, platforms, auth walls, envelopes.
 
 import { ResultValidationError } from "./errors.ts";

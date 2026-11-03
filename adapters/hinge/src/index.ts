@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: BUSL-1.1
+// SPDX-License-Identifier: MIT
 
 /**
  * @phonehands/hinge-adapter -- Hinge app adapter (MVP: read-only).

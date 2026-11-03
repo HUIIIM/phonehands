@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: BUSL-1.1 -->
+<!-- SPDX-License-Identifier: MIT -->
 
 # @phonehands/api-backend
 
@@ -41,5 +41,5 @@ destructive re-login, logout rotation), `capabilities` + `redact`.
 
 ## License
 
-`SPDX-License-Identifier: BUSL-1.1` on every
+`SPDX-License-Identifier: MIT` on every
 source file. Never MIT. Final legal text to be determined by GC.

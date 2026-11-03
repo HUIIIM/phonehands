@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: BUSL-1.1 -->
+<!-- SPDX-License-Identifier: MIT -->
 # Security Policy · 安全策略
 
 ## Reporting a vulnerability · 报告漏洞

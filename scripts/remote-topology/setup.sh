@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# SPDX-License-Identifier: BUSL-1.1
+# SPDX-License-Identifier: MIT
 #
 # phonehands remote-topology setup.sh — one-command remote topology deploy (Mac side).
 #

@@ -3,7 +3,7 @@
   "files": [
     "dist"
   ],
-  "license": "SEE LICENSE IN LICENSE.md",
+  "license": "MIT",
   "main": "./src/index.ts",
   "name": "@phonehands/core",
   "scripts": {

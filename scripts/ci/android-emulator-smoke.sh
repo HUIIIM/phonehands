@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# SPDX-License-Identifier: BUSL-1.1
+# SPDX-License-Identifier: MIT
 # Runs inside reactivecircus/android-emulator-runner once the emulator has
 # booted. Kept as one script because the action runs each line of `script:`
 # in its own `sh -c` (no shared variables, no `set -e`, no `\` continuations).

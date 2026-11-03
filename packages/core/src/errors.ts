@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: BUSL-1.1
+// SPDX-License-Identifier: MIT
 // Typed errors for @phonehands/core. All errors carry a machine-readable `code`.
 
 export class PhoneHandsError extends Error {

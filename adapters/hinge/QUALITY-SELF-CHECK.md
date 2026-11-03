@@ -1,6 +1,8 @@
-<!-- SPDX-License-Identifier: BUSL-1.1 -->
+<!-- SPDX-License-Identifier: MIT -->
 
 # 质量门禁自检表 — @phonehands/hinge-adapter
+
+> **历史记录**：本页是当时的自检快照，其中的 BSL / `BUSL-1.1` 字样反映当时的许可证。2026-10-31 起本仓改为 MIT（见 LICENSE），现行头为 `SPDX-License-Identifier: MIT`。
 
 > 标准：`docs/quality-gates.md`（董事长 2026-10-09 21:4x 质量令）。
 > 交付日期：2026-10-09。有一门 FAIL 即打回。

@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: BUSL-1.1
+// SPDX-License-Identifier: MIT
 // Single serial operation queue (hinge-mcp P5).
 //
 // - One account's operations run strictly serially (per-account promise tail).

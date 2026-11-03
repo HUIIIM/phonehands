@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# SPDX-License-Identifier: BUSL-1.1
+# SPDX-License-Identifier: MIT
 # Real-APK end-to-end on the booted emulator: install the helper, grant the
 # accessibility service, start the agent service through its own UI, and let
 # examples/android-wireless-demo/apk-e2e.ts drive it over the real relay.

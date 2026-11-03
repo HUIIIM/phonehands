@@ -8,5 +8,5 @@
     "test": "node --test integration.test.ts",
     "typecheck": "tsc --noEmit --allowImportingTsExtensions --erasableSyntaxOnly --module nodenext --moduleResolution nodenext --target es2022 --strict --skipLibCheck integration.test.ts"
   },
-  "license": "SEE LICENSE IN LICENSE file"
+  "license": "MIT"
 }

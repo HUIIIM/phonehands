@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: BUSL-1.1
+// SPDX-License-Identifier: MIT
 // Action registry: which actions exist in THIS build, and which backends
 // are registered. Write actions are registered only in full builds.
 

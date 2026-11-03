@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: BUSL-1.1
+// SPDX-License-Identifier: MIT
 // Unified Action interface — the frozen contract every package implements.
 //
 // Names and parameters are frozen: observe / tap / tap_text / swipe / type_text /

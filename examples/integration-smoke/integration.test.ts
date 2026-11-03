@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: BUSL-1.1
+// SPDX-License-Identifier: MIT
 // Cross-package integration smoke: REAL @phonehands/core Router +
 // REAL HingeApiAdapter (adapters/hinge) + REAL DeviceBackend
 // (packages/device-backend), both against mock servers.

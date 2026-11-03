@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: BUSL-1.1
+// SPDX-License-Identifier: MIT
 // Auth handoff protocol (hinge-mcp P2 spirit, the phonehands queued pause/resume design).
 //
 // When a backend hits an auth wall (password / Face ID / SMS code screen)
