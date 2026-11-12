@@ -4,7 +4,7 @@
   },
   "description": "Hinge app adapter (MVP: read-only) for the phonehands API engine. Tests run against the bundled mock server only.",
   "devDependencies": {
-    "typescript": "^5.9.0"
+    "typescript": "^7.0.2"
   },
   "files": [
     "src"
