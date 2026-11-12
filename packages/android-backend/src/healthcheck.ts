@@ -22,7 +22,7 @@ export async function checkRelay(
   timeoutMs = 5_000,
 ): Promise<RelayHealth> {
   const url = rawUrl ?? relayUrlFromEnv();
-  let parsed;
+  let parsed: ReturnType<typeof parseRelayUrl>;
   try {
     parsed = parseRelayUrl(url);
   } catch {
