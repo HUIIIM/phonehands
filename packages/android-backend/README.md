@@ -1,6 +1,6 @@
 # @phonehands/android-backend
 
-<!-- SPDX-License-Identifier: BUSL-1.1 -->
+<!-- SPDX-License-Identifier: MIT -->
 
 Wireless-first Android device engine for PhoneHands. The phone dials **out**
 to the agent's WebSocket relay — NAT-safe, no USB, no same-LAN requirement,

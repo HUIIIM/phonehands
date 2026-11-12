@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: BUSL-1.1
+// SPDX-License-Identifier: MIT
 // Read-only build assertions. Runs ONLY against a build produced with
 // PHONEHANDS_READ_ONLY=1 (`npm run test:readonly`).
 import { describe, it } from "node:test";

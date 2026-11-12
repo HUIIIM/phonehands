@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: BUSL-1.1 -->
+<!-- SPDX-License-Identifier: MIT -->
 
 # PhoneHands
 
@@ -12,7 +12,7 @@ engine and marks the result as degraded.
 | Deployment | Self-hosted: Node 22+ monorepo (npm workspaces); iOS devices need Mac + Xcode + USB iPhone; Android helper APK in development |
 | Live demo | Not applicable — a local library and scripts, no hosted service; local mock demo in [`examples/dual-demo`](./examples/dual-demo) |
 | Interfaces | TypeScript library (`@phonehands/core` unified Action interface) · command-line scripts (environment doctor, remote topology) |
-| Licence | BUSL-1.1 ([LICENSE](LICENSE)), licensor VERTCITY LLC |
+| Licence | MIT ([LICENSE](LICENSE)) |
 | Languages | [简体中文](./README.md) · English |
 | Contact | Security: [SECURITY.md](SECURITY.md) (private reporting) · Product: [vertciti.com](https://vertciti.com) |
 
@@ -255,7 +255,7 @@ check [docs/troubleshooting.md](./docs/troubleshooting.md).
 }
 ```
 
-**Licence: BUSL-1.1.** Source available; free for non-production use; production or commercial use requires a commercial licence from the licensor, VERTCITY LLC; each version converts to Apache 2.0 four years after its first public distribution. BUSL is not an OSI-approved open-source licence. Full text: [LICENSE](LICENSE).
+**Licence: MIT.** Free to use, modify and distribute, including commercially, as long as the copyright and licence notice are kept; provided "as is", without warranty. Third-party components keep their own licences ([THIRD_PARTY_NOTICES.md](./THIRD_PARTY_NOTICES.md)). Full text: [LICENSE](LICENSE).
 
 ---
 

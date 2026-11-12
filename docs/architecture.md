@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: BUSL-1.1 -->
+<!-- SPDX-License-Identifier: MIT -->
 
 # PhoneHands 架构
 
@@ -63,5 +63,5 @@ graph TB
 3. 构造函数**必须**要求显式 `baseUrl`，不许有生产默认（测试红线：mock server 只跑 127.0.0.1）。
 4. 每个结果包 core envelope；`capabilities.ts` 声明能力表。
 5. 测试：mock server＋故障注入（403/429/412）；secret 进日志路径喂假值断言零残留。
-6. `THIRD_PARTY_NOTICES.md` 登记任何新上游；新文件加 BSL header。
+6. `THIRD_PARTY_NOTICES.md` 登记任何新上游；新文件加 `SPDX-License-Identifier: MIT` 头。
 7. PR 模板走 `.github/pull_request_template.md`；文档即契约——README 里的每个能力都要有测试对应。

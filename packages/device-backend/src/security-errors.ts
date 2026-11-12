@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: BUSL-1.1
+// SPDX-License-Identifier: MIT
 
 /** Thrown when a non-loopback device address is configured. */
 export class DeviceSecurityError extends Error {

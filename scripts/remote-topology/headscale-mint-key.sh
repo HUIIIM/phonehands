@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# SPDX-License-Identifier: BUSL-1.1
+# SPDX-License-Identifier: MIT
 # Mint a reusable 24h pre-auth key for $1 — runs ON the headscale server
 # (setup.sh pipes it over ssh). Prints ONLY the key on stdout.
 # headscale >= 0.26: preauthkeys --user takes the numeric user ID, and keys

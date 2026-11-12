@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: BUSL-1.1 -->
+<!-- SPDX-License-Identifier: MIT -->
 
 # PhoneHands 更新记录
 
@@ -10,6 +10,7 @@
 ## v0.1.0（未发布）
 
 **改了什么**
+- 许可证全面改为 MIT（2026-11-03）：落实 10-31 的 BSL 1.1 → MIT 裁决。所有文件头改为 `SPDX-License-Identifier: MIT`，README / THIRD_PARTY_NOTICES / SKILL / PR 模板 / 运营文档 / 横幅 SVG 的许可证表述同步，`package.json` 的 `license` 字段改为 `"MIT"`；core 的头检查测试由"必须 BUSL、禁止 MIT"改为"必须 MIT、不得残留 BUSL"。注明日期的历史自检快照保留原文，并加了历史说明。
 - 工程标准补齐（2026-11-03，#7）：新增 `.editorconfig`、`.env.example`、`dependabot.yml`（github-actions / npm / gradle）、`security.yml`（TruffleHog 密钥扫描、CodeQL、dependency-review）、`scorecard.yml`（OpenSSF Scorecard）、`.pre-commit-config.yaml`；CI 加 Biome lint（遇 error 阻断，并顺手修掉 4 个 error）；新增 `docs/PRODUCT.md`；README 内嵌真实降级录屏。审计分 67.2 C → 98.5 S（本地按 `audit.py` 实测）。
 - 独立评估修复（2026-10-26）：core 队列 deadline 与认证超时计时器不再 `unref`，超时承诺在短进程里也会兑现（core 测试 44/44，原先 8 个被取消）；新增 push/PR CI；Android relay 绑非 loopback 地址时必须配 token，加 hello 超时与消息大小上限；SSH 反向隧道默认只绑服务器 `127.0.0.1`；headscale 固定版本并校验 sha256；Android helper 明文 `ws://` 只放行 loopback 与 tailnet 域名；日志脱敏补上 Cookie / Basic / JWT / 手机号；zod 升到 4.6.7；workflow 全部按 SHA 固定并声明最小权限。
 - 独立评估收尾（2026-10-27）：只读构建同时去掉 `launch_app` / `press_home`（所有写级动作都不存在）；observe 不再上传密码框内容；已存在的 `~/.phonehands` 收紧到 0700；构建标志文件不再写时间戳（构建不再弄脏工作区）；headscale 配置模板和入网命令对齐 v0.29（`dns:`、`noise.private_key_path`、按用户 ID 发 key、`hskey-auth-` 新格式）；Android helper 构建脚本改为 `.gradle.kts`（原文件是 Kotlin DSL 语法），CI 新增 APK 编译；新增 SECURITY.md、CODEOWNERS。

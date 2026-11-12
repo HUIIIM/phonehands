@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# SPDX-License-Identifier: BUSL-1.1
+# SPDX-License-Identifier: MIT
 #
 # resign.sh — WDA signature watchdog + one-click re-sign (macOS).
 #

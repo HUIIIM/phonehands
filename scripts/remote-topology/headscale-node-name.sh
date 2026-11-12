@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# SPDX-License-Identifier: BUSL-1.1
+# SPDX-License-Identifier: MIT
 # Read `headscale nodes list -o json` on stdin; print the MagicDNS name
 # (given_name) of the node whose hostname/name matches $1. Prints nothing if
 # absent. Used by setup.sh on the Mac; the human-readable table is colored and

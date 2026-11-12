@@ -1,6 +1,7 @@
-// SPDX-License-Identifier: BUSL-1.1
+// SPDX-License-Identifier: MIT
 // Security gate tests for @phonehands/core:
-//  - BSL license header present on every .ts file (never MIT)
+//  - MIT SPDX header present on every .ts file; no leftover BUSL/BSL identifier
+//    (licence changed BSL 1.1 -> MIT by owner ruling 2026-10-31)
 //  - core opens no network sockets: no network module imports in src
 //    (loopback-only posture — the device link lives in device-backend,
 //    core itself is transport-free by construction)
@@ -9,7 +10,9 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
 
-const HEADER = "// SPDX-License-Identifier: BUSL-1.1";
+const HEADER = "// SPDX-License-Identifier: MIT";
+// Built from parts so this file's own source never matches it.
+const STALE_LICENSE = new RegExp(["SPDX-License-Identifier:\\s*BUSL", "Business" + " Source License"].join("|"), "i");
 const PKG_ROOT = path.join(import.meta.dirname, "..");
 
 function tsFiles(dir: string): string[] {
@@ -27,20 +30,20 @@ function tsFiles(dir: string): string[] {
 }
 
 describe("security: license headers", () => {
-  it("every .ts file carries the BUSL-1.1 header and none mention MIT", () => {
+  it("every .ts file carries the MIT header and none still carry BUSL", () => {
     const files = [...tsFiles(path.join(PKG_ROOT, "src")), ...tsFiles(path.join(PKG_ROOT, "test"))];
     assert.ok(files.length > 0, "expected to find .ts files");
     const missing: string[] = [];
-    const mit: string[] = [];
+    const stale: string[] = [];
     for (const file of files) {
       const first = fs.readFileSync(file, "utf8").split("\n")[0];
       if (first.trim() !== HEADER) missing.push(path.relative(PKG_ROOT, file));
-      if (/SPDX-License-Identifier:\s*MIT/i.test(fs.readFileSync(file, "utf8"))) {
-        mit.push(path.relative(PKG_ROOT, file));
+      if (STALE_LICENSE.test(fs.readFileSync(file, "utf8"))) {
+        stale.push(path.relative(PKG_ROOT, file));
       }
     }
-    assert.deepEqual(missing, [], "files missing the BUSL-1.1 header");
-    assert.deepEqual(mit, [], "files carrying an MIT identifier (forbidden)");
+    assert.deepEqual(missing, [], "files missing the MIT header");
+    assert.deepEqual(stale, [], "files still carrying a BUSL identifier (licence is MIT)");
   });
 });
 

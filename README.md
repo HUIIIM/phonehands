@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: BUSL-1.1 -->
+<!-- SPDX-License-Identifier: MIT -->
 
 # PhoneHands
 
@@ -10,7 +10,7 @@
 | 部署 | 自托管：Node 22+ monorepo（npm workspaces）；iOS 真机需 Mac＋Xcode＋USB iPhone；Android helper APK 实现中 |
 | 在线演示 | 不适用：本地库与脚本，没有托管服务；本地 mock 演示见 [`examples/dual-demo`](./examples/dual-demo) |
 | 接口 | TypeScript 库（`@phonehands/core` 统一 Action 接口）· 命令行脚本（环境体检、远程拓扑） |
-| 许可证 | BUSL-1.1（[LICENSE](LICENSE)），许可方 VERTCITY LLC |
+| 许可证 | MIT（[LICENSE](LICENSE)） |
 | 语言 | 简体中文 · [English](./README.en.md) |
 | 联系 | 安全：[SECURITY.md](SECURITY.md)（私密报告） · 产品：[vertciti.com](https://vertciti.com) |
 
@@ -230,7 +230,7 @@ iPhone Use 是纯设备层（USB 直连 WDA）。PhoneHands 是双引擎（API�
 }
 ```
 
-**许可证：BUSL-1.1。** 源码公开；非生产用途免费；生产/商用须向许可方 VERTCITY LLC 申请商业授权；各版本自首次公开发行满 4 年转 Apache 2.0。BUSL 不是 OSI 定义的开源许可证。全文见 [LICENSE](LICENSE)。
+**许可证：MIT。** 可自由使用、修改、分发（含商用），保留版权声明与许可声明即可；按"原样"提供、不附任何担保。第三方组件保留各自许可证（见 [THIRD_PARTY_NOTICES.md](./THIRD_PARTY_NOTICES.md)）。全文见 [LICENSE](LICENSE)。
 
 ---
 

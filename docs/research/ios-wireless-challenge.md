@@ -1,7 +1,7 @@
 # Open Challenge: True Wireless iOS — Phone in Your Pocket, Mac at Home
 
 > status: 草案，供 phonehands 发布日进 README §10（未解问题共研）
-> bounty: 贡献者榜单 + 商业授权分成意向（随 BSL 1.1 最终文本由 GC 确认）
+> bounty: 贡献者榜单 + 奖励意向（具体条款待 owner 确认；本仓 2026-10-31 起为 MIT，原"商业授权分成"前提已不存在）
 > redlines: 只做自己设备的方案；不抄任何项目代码；ToS 灰色地带必须诚实声明
 
 ---
@@ -71,7 +71,7 @@ negative results with methodology count) earns a place on the leaderboard.
 - **Leaderboard**: permanent "Wall-breakers" section in README, ranked by verification date
 - **Commercial license revenue share**: contributors of accepted solutions are offered a
   share of phonehands commercial licensing revenue attributable to wireless operation
-  (intent; final terms in the BSL 1.1 legal text, GC to confirm)
+  (intent only; final terms to be set by the owner. The repo is MIT since 2026-10-31, so the earlier "commercial-licence revenue share" premise no longer exists)
 - **Co-authorship** of the resulting `docs/research/ios-wireless-breakthrough.md`
 
 ---
@@ -88,4 +88,4 @@ negative results with methodology count) earns a place on the leaderboard.
 
 **参与**：Discussion/PR 标题带 `[challenge-wireless]`，附步骤+60 秒内 demo 视频+原创声明；我们在固定拓扑 rig 上复现后上榜。
 
-**悬赏**：README "破墙者"永久榜单 + 无线能力带来的商业授权收入分成意向（最终以 BSL 1.1 法律文本、GC 确认为准）+ 突破文档联署。
+**悬赏**：README "破墙者"永久榜单 + 奖励意向（具体条款待 owner 确认；本仓已改为 MIT，原"商业授权收入分成"前提不再成立）+ 突破文档联署。

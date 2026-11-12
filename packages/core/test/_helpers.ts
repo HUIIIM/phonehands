@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: BUSL-1.1
+// SPDX-License-Identifier: MIT
 // Shared mock backends for @phonehands/core tests. Mocks only — no real accounts.
 
 import type { ActionName } from "../src/actions.ts";

@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: BUSL-1.1 -->
+<!-- SPDX-License-Identifier: MIT -->
 
 # D-Day 前 48 小时文档冻结检查表
 
@@ -15,7 +15,7 @@
 - [ ] Discussions 5 分类已开（Q&A／Show & Tell／Open Challenges／Ideas／Announcements）
 - [ ] CHANGELOG.md 有 v0.1.0 条目（三段式：改了什么＋验证＋升级指引）
 - [ ] THIRD_PARTY_NOTICES.md 与 package 依赖清单一致
-- [ ] BSL 声明在 README 第一屏＋LICENSE 文件（GC 文本）
+- [ ] 许可证（MIT）声明在 README 第一屏＋LICENSE 文件
 - [ ] Show HN 首评预写（带 GIF＋一句话＋安装 prompt）
 - [ ] 所有对外文案 GC＋CEO 双终审通过
 
@@ -31,6 +31,6 @@
 | Discussions 5 分类 | PENDING | 仓库 public 后开 |
 | CHANGELOG v0.1.0 | PASS | 三段式条目已写，标注"未发布" |
 | THIRD_PARTY_NOTICES | PASS | 6 条上游已登记，待 GC 逐条裁决 |
-| BSL 第一屏＋LICENSE | PASS | README 第一屏已声明；LICENSE 终稿已落仓（合规放行） |
+| 许可证第一屏＋LICENSE | PASS | README 第一屏声明 MIT；LICENSE 为 MIT 全文（2026-10-31 由 BSL 1.1 改为 MIT） |
 | Show HN 首评 | PENDING | 待内容管线 |
 | GC＋CEO 双终审 | PENDING | 发布前置 |
