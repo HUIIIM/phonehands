@@ -33,5 +33,5 @@ android {
 dependencies {
     implementation("androidx.core:core-ktx:1.13.1")
     // WebSocket client (phone dials OUT to the relay; no server socket on device)
-    implementation("com.squareup.okhttp3:okhttp:4.12.0")
+    implementation("com.squareup.okhttp3:okhttp:5.5.1")
 }
