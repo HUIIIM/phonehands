@@ -50,7 +50,7 @@ agent 操作手机有两条路：调 App 的 HTTP 接口，速度快但会因 Ap
 ## 快速开始
 
 ```bash
-git clone <repo-url> && cd phonehands   # repo-url 待公开发布时公布
+git clone https://github.com/HUIIIM/phonehands.git && cd phonehands
 npm install && npm run build && npm test
 cd examples/dual-demo && npm test       # mock 降级演示，无需手机
 ```
