@@ -59,7 +59,7 @@ Actions are defined in `@phonehands/core`; capability tables live in each packag
 ## Quick start
 
 ```bash
-git clone <repo-url> && cd phonehands   # repo-url published at public release
+git clone https://github.com/HUIIIM/phonehands.git && cd phonehands
 npm install && npm run build && npm test
 cd examples/dual-demo && npm test       # mock degradation demo, no phone needed
 ```
