@@ -1,10 +1,10 @@
 {
   "dependencies": {
-    "ws": "8.22.0"
+    "ws": "8.22.2"
   },
   "description": "Wireless-first Android device engine: phone dials out over WebSocket, agent serves actions (tap/swipe/screenshot/launch/observe)",
   "devDependencies": {
-    "@types/ws": "8.18.1",
+    "@types/ws": "8.18.2",
     "c8": "12.0.0",
     "typescript": "^5.9.0"
   },
