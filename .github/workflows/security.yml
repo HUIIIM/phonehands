@@ -22,7 +22,7 @@ jobs:
           fetch-depth: 0
       - uses: trufflesecurity/trufflehog@ea68ca03c865c5f324e86e849ced20ed3cf9dbbb # v3.99.8
         with:
-          extra_args: --results=verified,unknown
+          extra_args: --results=verified,unknown --exclude-paths=trufflehog-exclude-paths.txt
 
   codeql:
     name: codeql (${{ matrix.language }})
